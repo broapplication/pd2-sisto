@@ -1,0 +1,33 @@
+
+import javax.xml.bind.*;
+
+import com.sun.xml.internal.bind.v2.runtime.JAXBContextImpl;
+import com.sun.xml.internal.bind.v2.runtime.JAXBContextImpl.JAXBContextBuilder;
+
+import java.io.File;
+import generated.*;
+//-import test.*;
+
+public class Test
+{
+	public static final String XML_TEST_FILE = "test.xml";
+/**/
+	public static void main(String[] args) throws Exception
+	{
+		JAXBContextBuilder jb=new JAXBContextBuilder();
+		JAXBContextImpl jc=new JAXBContextImpl(jb);
+		JAXBContext context=jc.newInstance(ObjectFactory.class);
+		//JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
+		//-JAXBContext context = JAXBContext.newInstance("generated");
+		//-JAXBContext context = JAXBContext.newInstance(ObjectFactoryEx.class);
+		Unmarshaller u = context.createUnmarshaller();
+		u.setProperty("com.sun.xml.bind.ObjectFactory",new ObjectFactoryEx());
+		//-JAXBElement<TestType> doc = (JAXBElement<TestType>) 
+		JAXBElement<TestTypeEx> doc = (JAXBElement<TestTypeEx>) 
+		u.unmarshal(new File(XML_TEST_FILE));
+		System.out.println(doc.getValue().getTag2());
+	}
+/**/
+}
+
+

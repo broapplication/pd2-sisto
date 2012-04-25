@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE workflowMonitor SYSTEM "wfInfo.dtd">
+<workflowMonitor>
+<workflow nome="RedazioneArticolo">
+<action automaticallyIstantiated="false" name="Controllo" role="Redattore">
+<simpleAction possibileNextActions="Revisione Pubblicazione"/>
+<actionStatus actor="actor_2" process="process_1" terminationTime="20/01/2008 06:16 CET"/>
+<actionStatus actor="actor_4" process="process_1" terminationTime="21/01/2008 11:46 CET"/>
+<actionStatus actor="actor_4" process="process_2" terminationTime="31/01/2008 10:22 CET"/>
+<actionStatus process="process_2"/>
+<actionStatus actor="actor_4" process="process_3" terminationTime="25/01/2008 12:53 CET"/>
+<actionStatus actor="actor_4" process="process_4" terminationTime="25/01/2008 10:24 CET"/>
+<actionStatus actor="actor_2" process="process_5" terminationTime="22/01/2008 10:44 CET"/>
+<actionStatus actor="actor_2" process="process_6"/>
+<actionStatus actor="actor_6" process="process_7"/>
+<actionStatus actor="actor_6" process="process_8" terminationTime="24/01/2008 07:36 CET"/>
+<actionStatus actor="actor_6" process="process_8" terminationTime="28/01/2008 11:18 CET"/>
+</action>
+<action automaticallyIstantiated="false" name="Pubblicazione" role="Redattore">
+<simpleAction/>
+<actionStatus actor="actor_4" process="process_1"/>
+<actionStatus actor="actor_4" process="process_3" terminationTime="26/01/2008 12:19 CET"/>
+<actionStatus actor="actor_4" process="process_4"/>
+<actionStatus actor="actor_4" process="process_5" terminationTime="23/01/2008 01:17 CET"/>
+</action>
+<action automaticallyIstantiated="true" name="Scrittura" role="Giornalista">
+<simpleAction possibileNextActions="Controllo"/>
+<actionStatus actor="actor_1" process="process_1" terminationTime="19/01/2008 01:36 CET"/>
+<actionStatus actor="actor_1" process="process_2" terminationTime="30/01/2008 12:34 CET"/>
+<actionStatus actor="actor_5" process="process_3" terminationTime="25/01/2008 08:16 CET"/>
+<actionStatus actor="actor_5" process="process_4" terminationTime="24/01/2008 04:50 CET"/>
+<actionStatus actor="actor_3" process="process_5" terminationTime="21/01/2008 06:34 CET"/>
+<actionStatus actor="actor_5" process="process_6" terminationTime="18/01/2008 10:15 CET"/>
+<actionStatus actor="actor_3" process="process_7" terminationTime="16/01/2008 06:50 CET"/>
+<actionStatus actor="actor_1" process="process_8" terminationTime="24/01/2008 05:13 CET"/>
+</action>
+<action automaticallyIstantiated="false" name="Revisione" role="Giornalista">
+<simpleAction possibileNextActions="Controllo"/>
+<actionStatus actor="actor_3" process="process_1" terminationTime="21/01/2008 10:24 CET"/>
+<actionStatus actor="actor_3" process="process_2" terminationTime="01/02/2008 05:53 CET"/>
+<actionStatus actor="actor_1" process="process_8" terminationTime="26/01/2008 12:46 CET"/>
+<actionStatus process="process_8"/>
+</action>
+</workflow>
+<process PID="process_1" startTime="17/01/2008 10:47 CET" workflow="RedazioneArticolo"/>
+<process PID="process_2" startTime="28/01/2008 11:24 CET" workflow="RedazioneArticolo"/>
+<process PID="process_3" startTime="25/01/2008 12:05 CET" workflow="RedazioneArticolo"/>
+<process PID="process_4" startTime="23/01/2008 10:27 CET" workflow="RedazioneArticolo"/>
+<process PID="process_5" startTime="19/01/2008 11:39 CET" workflow="RedazioneArticolo"/>
+<process PID="process_6" startTime="18/01/2008 01:29 CET" workflow="RedazioneArticolo"/>
+<process PID="process_7" startTime="14/01/2008 10:29 CET" workflow="RedazioneArticolo"/>
+<process PID="process_8" startTime="23/01/2008 03:39 CET" workflow="RedazioneArticolo"/>
+<actor id="actor_1" name="Ascanio Castiglia" role="Giornalista"/>
+<actor id="actor_2" name="Pippo Pascal" role="Redattore"/>
+<actor id="actor_3" name="Marco Piacentini" role="Giornalista"/>
+<actor id="actor_4" name="Eva Neri" role="Redattore"/>
+<actor id="actor_5" name="Matteo Vicentini" role="Giornalista"/>
+<actor id="actor_6" name="Mario Manzoni" role="Redattore"/>
+</workflowMonitor>

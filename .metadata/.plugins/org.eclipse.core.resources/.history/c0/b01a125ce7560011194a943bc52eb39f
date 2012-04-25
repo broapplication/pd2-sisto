@@ -1,0 +1,7 @@
+package it.polito.pd2.WF.sol6.service;
+
+public class WorkflowServerException extends Exception {
+	public WorkflowServerException(String message) {
+		super(message);
+	}
+}

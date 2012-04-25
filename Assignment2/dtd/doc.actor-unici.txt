@@ -1,0 +1,13 @@
+Si è scelto di incapsulare i processi nei workflow, per non usare una lista a parte
+e quindi un altro identificatore.
+Al contrario, gli attori sono in una lista a parte, agganciata a workflowMonitor,
+per evitare ridondanza (il campo "role").
+Ogni workflow ha un array di action e uno di processi.
+Le azioni hanno necessariamente un sottoelemento (simpleAction o processAction).
+I processi hanno una lista di elementi actionStatus, ciascuno dei quali ha un attributo
+action che punta alla corrispondente azione del workflow istanziato dal processo.
+Gli identificatori di process, workflow e action sono attributi di tipo NMTOKEN: si è
+preferito non creare degli identificatori unici di tipo ID per non appesantire troppo
+il controllo sui riferimenti.
+Anche i riferimenti sono perciò di tipo NMTOKEN o NMTOKENS (possibleNextActions).
+Le date sono un'unica stringa e sono attributi di tipo CDATA.

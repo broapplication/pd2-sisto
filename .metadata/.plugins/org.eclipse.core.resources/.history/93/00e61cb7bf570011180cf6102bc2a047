@@ -1,0 +1,31 @@
+package it.polito.pd2.WF.sol6.service;
+
+import it.polito.pd2.WF.sol6.service.gen.GenericFault_Exception;
+import it.polito.pd2.WF.sol6.service.gen.ProcessSummary;
+import it.polito.pd2.WF.sol6.service.gen.UnknownName;
+import it.polito.pd2.WF.sol6.service.gen.WorkflowPortType;
+import javax.jws.WebService;
+import javax.xml.ws.Holder;
+
+@WebService(
+		name="WorkflowPortType", 
+		endpointInterface="it.polito.pd2.WF.sol6.service.gen.WorkflowPortType", 
+		wsdlLocation="META-INF/WorkflowService.wsdl",
+		targetNamespace="http://pad.polito.it/Workflow", 
+		serviceName="WorkflowService", portName="WorkflowPort")
+public class WorkflowServiceImpl implements WorkflowPortType {
+
+	private WorkflowServer server;
+	
+	public WorkflowServiceImpl() {
+		server=WorkflowServer.getInstance();
+	}
+	
+	@Override
+	public ProcessSummary newProcess(String clientID, int requestID,
+			String workflowName) throws GenericFault_Exception, UnknownName {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

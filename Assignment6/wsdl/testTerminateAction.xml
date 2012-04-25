@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:terminateAction xmlns:tns="http://pad.polito.it/WorkflowRestricted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pad.polito.it/WorkflowRestricted WorkflowRestrictedService_schema.xsd ">
+  <requestID>idvalue0</requestID>
+  <PCode>PCode</PCode>
+  <ACode>ACode</ACode>
+  <nextAction>Name</nextAction>
+  <nextAction>Name1</nextAction>
+</tns:terminateAction>

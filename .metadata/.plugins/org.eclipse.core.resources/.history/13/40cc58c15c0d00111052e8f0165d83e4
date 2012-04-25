@@ -1,0 +1,26 @@
+
+import javax.xml.bind.*;
+import java.io.File;
+import generated.*;
+//-import test.*;
+
+public class Test
+{
+	public static final String XML_TEST_FILE = "test.xml";
+/**/
+	public static void main(String[] args) throws Exception
+	{
+		JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
+		//-JAXBContext context = JAXBContext.newInstance("generated");
+		//-JAXBContext context = JAXBContext.newInstance(ObjectFactoryEx.class);
+		Unmarshaller u = context.createUnmarshaller();
+		u.setProperty("com.sun.xml.bind.ObjectFactory",new ObjectFactoryEx());
+		//-JAXBElement<TestType> doc = (JAXBElement<TestType>) 
+		JAXBElement<TestTypeEx> doc = (JAXBElement<TestTypeEx>) 
+		u.unmarshal(new File(XML_TEST_FILE));
+		System.out.println(doc.getValue().getTag2());
+	}
+/**/
+}
+
+

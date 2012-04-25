@@ -1,0 +1,21 @@
+Elementi:
+L'elemento workflowMonitor, globale, può avere una lista di workflow.
+Ogni workflow ha una lista di elementi simpleAction o processAction
+e una di elementi process.
+Le azioni simpleAction hanno una lista di elementi possibleNextAction.
+I processi hanno una lista di elementi actionStatus, ciascuno dei quali
+può avere un elemento actor.
+
+Tipi:
+Tutti i tipi associati agli elementi sono dichiarati globali.
+Le chiavi e i riferimenti associati a workflow e azioni sono di tipo semplice idType. 
+Per gli attributi startTime e terminationTime si è utilizzato il tipo semplice dateTime.
+
+Chiavi/riferimenti:
+Ogni elemento workflow è identificato da una chiave sull'attributo name ed è referenziato
+dall'attributo actionWorkflow di ciascun processAction.
+All'interno di ogni workflow:
+- ogni elemento simpleAction o processAction è identificato da una chiave sull'attributo name
+- gli elementi possibleNextAction e gli attributi action di actionStatus puntano alla chiave
+ sulle azioni.
+All'interno di ogni simpleAction, la lista di possibleNextAction ha valori unici.

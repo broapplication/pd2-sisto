@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<workflowMonitor xmlns="http://www.example.org/wfInfo">
+    <workflow name="RedazioneArticolo">
+        <simpleAction role="Redattore" name="Controllo" automaticallyInstantiated="false">
+            <possibleNextAction>Revisione</possibleNextAction>
+            <possibleNextAction>Pubblicazione</possibleNextAction>
+        </simpleAction>
+        <simpleAction role="Giornalista" name="Revisione" automaticallyInstantiated="false">
+            <possibleNextAction>Controllo</possibleNextAction>
+        </simpleAction>
+        <simpleAction role="Redattore" name="Pubblicazione" automaticallyInstantiated="false"/>
+        <simpleAction role="Giornalista" name="Scrittura" automaticallyInstantiated="true">
+            <possibleNextAction>Controllo</possibleNextAction>
+        </simpleAction>
+        <process startTime="2008-01-16T11:02:00+01:00">
+            <actionStatus terminationTime="2008-01-17T14:06:00+01:00" action="Scrittura">
+                <actor role="Giornalista" name="Andrea Lascarpa"/>
+            </actionStatus>
+            <actionStatus terminationTime="2008-01-19T08:57:00+01:00" action="Controllo">
+                <actor role="Redattore" name="Ludovico Menegatti"/>
+            </actionStatus>
+            <actionStatus action="Pubblicazione">
+                <actor role="Redattore" name="Ludovico Menegatti"/>
+            </actionStatus>
+        </process>
+        <process startTime="2008-01-11T19:03:00+01:00">
+            <actionStatus terminationTime="2008-01-12T00:20:00+01:00" action="Scrittura">
+                <actor role="Giornalista" name="Andrea Lascarpa"/>
+            </actionStatus>
+            <actionStatus terminationTime="2008-01-12T09:02:00+01:00" action="Controllo">
+                <actor role="Redattore" name="Mario Rossi"/>
+            </actionStatus>
+            <actionStatus terminationTime="2008-01-14T06:47:00+01:00" action="Pubblicazione">
+                <actor role="Redattore" name="Francesca De Palma"/>
+            </actionStatus>
+        </process>
+        <process startTime="2008-01-15T14:05:00+01:00">
+            <actionStatus action="Scrittura">
+                <actor role="Giornalista" name="Andrea Lascarpa"/>
+            </actionStatus>
+        </process>
+        <process startTime="2008-01-16T12:04:00+01:00">
+            <actionStatus terminationTime="2008-01-16T22:34:00+01:00" action="Scrittura">
+                <actor role="Giornalista" name="Anreina Chemin"/>
+            </actionStatus>
+            <actionStatus terminationTime="2008-01-17T20:37:00+01:00" action="Controllo">
+                <actor role="Redattore" name="Ludovico Menegatti"/>
+            </actionStatus>
+            <actionStatus terminationTime="2008-01-18T08:34:00+01:00" action="Revisione">
+                <actor role="Giornalista" name="Andrea Lascarpa"/>
+            </actionStatus>
+            <actionStatus action="Controllo">
+                <actor role="Redattore" name="Ludovico Menegatti"/>
+            </actionStatus>
+        </process>
+    </workflow>
+</workflowMonitor>

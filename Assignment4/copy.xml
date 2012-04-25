@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<workflowMonitorType xmlns="http://www.example.org/wfInfo">
+    <workflow name="RedazioneArticolo">
+        <simpleAction role="Redattore" name="Controllo" automaticallyIstantiated="false">
+            <possibleNextAction>Revisione</possibleNextAction>
+            <possibleNextAction>Pubblicazione</possibleNextAction>
+        </simpleAction>
+        <simpleAction role="Giornalista" name="Revisione" automaticallyIstantiated="false">
+            <possibleNextAction>Controllo</possibleNextAction>
+        </simpleAction>
+        <simpleAction role="Redattore" name="Pubblicazione" automaticallyIstantiated="false"/>
+        <simpleAction role="Giornalista" name="Scrittura" automaticallyIstantiated="true">
+            <possibleNextAction>Controllo</possibleNextAction>
+        </simpleAction>
+        <process startTime="2008-01-29T20:05:00+01:00">
+            <actionStatus terminationTime="2008-01-30T22:13:00+01:00" actor="Alessia Piccoli" action="Scrittura"/>
+            <actionStatus terminationTime="2008-01-31T19:16:00+01:00" actor="Riccardo Perissino" action="Controllo"/>
+            <actionStatus action="Pubblicazione"/>
+        </process>
+    </workflow>
+    <workflow name="VenditaNormale">
+        <simpleAction role="Contabile" name="EmissFattura" automaticallyIstantiated="true">
+            <possibleNextAction>RicezPagamento</possibleNextAction>
+        </simpleAction>
+        <simpleAction role="Magazziniere" name="ConsegnaMerce" automaticallyIstantiated="true"/>
+        <simpleAction role="Contabile" name="RicezPagamento" automaticallyIstantiated="false"/>
+        <process startTime="2008-01-17T15:59:00+01:00">
+            <actionStatus actor="Eva Trapani" action="ConsegnaMerce"/>
+            <actionStatus action="EmissFattura"/>
+        </process>
+        <process startTime="2008-01-20T03:06:00+01:00">
+            <actionStatus terminationTime="2008-01-21T08:23:00+01:00" actor="Enrico Maria Verdi" action="ConsegnaMerce"/>
+            <actionStatus terminationTime="2008-01-22T05:06:00+01:00" actor="Mauro Di Crescenzo" action="EmissFattura"/>
+            <actionStatus actor="Anna Baldo" action="RicezPagamento"/>
+        </process>
+        <process startTime="2008-01-17T22:19:00+01:00">
+            <actionStatus actor="Enrico Maria Verdi" action="ConsegnaMerce"/>
+            <actionStatus terminationTime="2008-01-19T01:05:00+01:00" actor="Mauro Di Crescenzo" action="EmissFattura"/>
+            <actionStatus actor="Anna Baldo" action="RicezPagamento"/>
+        </process>
+        <process startTime="2008-01-26T21:55:00+01:00">
+            <actionStatus action="ConsegnaMerce"/>
+            <actionStatus action="EmissFattura"/>
+        </process>
+        <process startTime="2008-01-23T19:38:00+01:00">
+            <actionStatus terminationTime="2008-01-26T14:40:00+01:00" actor="Eva Trapani" action="ConsegnaMerce"/>
+            <actionStatus terminationTime="2008-01-24T19:57:00+01:00" actor="Mauro Di Crescenzo" action="EmissFattura"/>
+            <actionStatus actor="Monica Lascarpa" action="RicezPagamento"/>
+        </process>
+        <process startTime="2008-01-11T11:18:00+01:00">
+            <actionStatus terminationTime="2008-01-13T22:05:00+01:00" actor="Enrico Maria Verdi" action="ConsegnaMerce"/>
+            <actionStatus terminationTime="2008-01-12T16:47:00+01:00" actor="Mauro Di Crescenzo" action="EmissFattura"/>
+            <actionStatus actor="Mauro Di Crescenzo" action="RicezPagamento"/>
+        </process>
+        <process startTime="2008-01-19T05:08:00+01:00">
+            <actionStatus terminationTime="2008-01-19T13:32:00+01:00" actor="Eva Trapani" action="ConsegnaMerce"/>
+            <actionStatus terminationTime="2008-01-20T00:43:00+01:00" actor="Monica Lascarpa" action="EmissFattura"/>
+            <actionStatus terminationTime="2008-01-20T05:28:00+01:00" actor="Anna Baldo" action="RicezPagamento"/>
+        </process>
+    </workflow>
+    <workflow name="GestioneVendita">
+        <simpleAction role="AddettoVendite" name="AccettazOrdine" automaticallyIstantiated="true">
+            <possibleNextAction>VenditaPagAnt</possibleNextAction>
+            <possibleNextAction>VenditaNormale</possibleNextAction>
+        </simpleAction>
+        <processAction actionWorkflow="VenditaPagAnt" role="RespVendite" name="VenditaPagAnt" automaticallyIstantiated="false"/>
+        <processAction actionWorkflow="VenditaNormale" role="RespVendite" name="VenditaNormale" automaticallyIstantiated="false"/>
+        <process startTime="2008-01-18T11:20:00+01:00">
+            <actionStatus actor="Maurizio Tasca" action="AccettazOrdine"/>
+        </process>
+        <process startTime="2008-01-15T15:36:00+01:00">
+            <actionStatus terminationTime="2008-01-15T19:18:00+01:00" actor="Francesca Pascal" action="AccettazOrdine"/>
+            <actionStatus action="VenditaNormale"/>
+        </process>
+    </workflow>
+    <workflow name="VenditaPagAnt">
+        <simpleAction role="Magazziniere" name="ConsegnaMerce" automaticallyIstantiated="false"/>
+        <simpleAction role="Contabile" name="EmissFattura" automaticallyIstantiated="true">
+            <possibleNextAction>RicezPagamento</possibleNextAction>
+        </simpleAction>
+        <simpleAction role="Contabile" name="RicezPagamento" automaticallyIstantiated="false">
+            <possibleNextAction>ConsegnaMerce</possibleNextAction>
+        </simpleAction>
+        <process startTime="2008-01-12T12:11:00+01:00">
+            <actionStatus terminationTime="2008-01-13T23:06:00+01:00" actor="Pier Luigi Castiglia" action="EmissFattura"/>
+            <actionStatus terminationTime="2008-01-14T07:16:00+01:00" actor="Mario Orafi" action="RicezPagamento"/>
+            <actionStatus terminationTime="2008-01-16T02:13:00+01:00" actor="Elisabeth Tasca" action="ConsegnaMerce"/>
+        </process>
+    </workflow>
+    <actor role="Giornalista" name="Alessia Piccoli"/>
+    <actor role="Redattore" name="Riccardo Perissino"/>
+    <actor role="Magazziniere" name="Eva Trapani"/>
+    <actor role="Magazziniere" name="Enrico Maria Verdi"/>
+    <actor role="Contabile" name="Mauro Di Crescenzo"/>
+    <actor role="Contabile" name="Anna Baldo"/>
+    <actor role="Contabile" name="Monica Lascarpa"/>
+    <actor role="AddettoVendite" name="Maurizio Tasca"/>
+    <actor role="AddettoVendite" name="Francesca Pascal"/>
+    <actor role="Contabile" name="Pier Luigi Castiglia"/>
+    <actor role="Contabile" name="Mario Orafi"/>
+    <actor role="Magazziniere" name="Elisabeth Tasca"/>
+</workflowMonitorType>

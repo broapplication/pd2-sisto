@@ -1,0 +1,15 @@
+package it.polito.pd2.WF.sol6.service;
+
+import java.util.Calendar;
+import java.util.HashSet;
+
+public class ClientState {
+	
+	private Calendar lastRequest;
+	private HashSet<Integer> requests;
+	
+	public boolean addRequest(int request) {
+		requests.add(request);
+	}
+
+}

@@ -1,0 +1,63 @@
+1329123185173	Rename local variable 'wfList'
+1329123261653	Rename local variable 'wfSet'
+1329131284226	Copy folder
+1329131329367	Move folder
+1329131394691	Move folder
+1329131400031	Move folder
+1329131475684	Move folder
+1329151518452	Rename local variable 'n'
+1329159714504	Copy file
+1329159729974	Copy file
+1329161925594	Delete element
+1329161931661	Delete element
+1329161939160	Rename resource 'WorkflowRestrictedService.wsdl.bak'
+1329161944058	Rename resource 'WorkflowService.wsdl.bak'
+1329165034466	Copy folder
+1329170261090	Copy files
+1329171027501	Delete elements
+1329171606541	Copy file
+1329172145980	Delete element
+1329172152852	Copy folder
+1329172173648	Delete element
+1329172192943	Delete element
+1329172218927	Copy folder
+1329172311996	Copy folder
+1329172321359	Delete element
+1329172336678	Move folder
+1329207501349	Rename local variable 'names'
+1329224667156	Move compilation unit
+1329240399389	Rename local variable 'toCheckRoles'
+1329262922466	Rename local variable 'process'
+1329262929774	Rename local variable 'ris'
+1329262939413	Rename local variable 'proc'
+1329304002900	Encapsulate field 'lastRequest'
+1329306422591	Delete element
+1329306438679	Delete element
+1329321904055	Move method
+1329322061073	Move member 'Errors'
+1329322110184	Move member 'Messages'
+1329329148905	Move members
+1329330137740	Rename field 'REQUEST_ALREADY_SERVER'
+1329340984696	Rename method 'getXMLgcNow'
+1329341607464	Move member 'splitList'
+1329387063446	Rename local variable 'wfname'
+1329390318161	Rename local variable 'client'
+1329392164350	Rename local variable 'status'
+1329430933160	Copy file
+1329433095062	Rename type 'Client2Imp'
+1329433181115	Rename type 'Client2Exception'
+1329434303277	Rename field 'ic'
+1329437632339	Copy compilation unit
+1329437969426	Delete element
+1329438520300	Rename field 'ClientID'
+1329472335833	Rename local variable 'bp'
+1329472347565	Rename local variable 'wfBP'
+1329472375257	Rename local variable 'wfInfoBP'
+1329482680425	Rename method 'runtimeUpdateEndpoints'
+1329501727292	Copy file
+1329504502432	Rename local variable 'newStatus'
+1329524366811	Rename local variable 'proc'
+1329524423427	Rename local variable 'proc'
+1329525246098	Rename method 'duplicateProcessSummary'
+1329525255576	Rename method 'duplicateActionStatus'
+1329563285014	Rename field 'BACK'

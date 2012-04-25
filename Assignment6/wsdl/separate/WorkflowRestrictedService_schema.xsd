@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0" targetNamespace="http://pad.polito.it/WorkflowRestricted"
+	xmlns:tns="http://pad.polito.it/WorkflowRestricted" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="getWorkflowNames" type="tns:getWorkflowNames" />
+	<xs:element name="getWorkflowNamesResponse" type="tns:getWorkflowNamesResponse">
+		<xs:unique name="dummy6">
+			<xs:selector xpath="name" />
+			<xs:field xpath="." />
+		</xs:unique>
+	</xs:element>
+	<xs:element name="GenericFault" type="tns:genericFault" />
+
+	<xs:element name="getWorkflows" type="tns:getWorkflows">
+		<xs:unique name="dummy7">
+			<xs:selector xpath="name" />
+			<xs:field xpath="." />
+		</xs:unique>
+	</xs:element>
+	<xs:element name="getWorkflowsResponse" type="tns:getWorkflowsResponse">
+		<xs:key name="workflowNameKey">
+			<xs:selector xpath="workflow" />
+			<xs:field xpath="name" />
+		</xs:key>
+	</xs:element>
+	<xs:element name="UnknownNames" type="tns:UnknownNames">
+		<xs:unique name="dummy13">
+			<xs:selector xpath="names" />
+			<xs:field xpath="." />
+		</xs:unique>
+	</xs:element>
+	<xs:element name="UnknownCodes" type="tns:UnknownCodes">
+		<xs:unique name="dummy12">
+			<xs:selector xpath="codes" />
+			<xs:field xpath="." />
+		</xs:unique>
+	</xs:element>
+
+	<xs:complexType name="genericFault">
+		<xs:sequence>
+			<xs:element name="errno" type="xs:int"></xs:element>
+			<xs:element name="message" type="xs:string" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="getWorkflows">
+		<xs:sequence>
+			<xs:element name="name" type="tns:Name" minOccurs="0"
+				maxOccurs="unbounded" />
+			<xs:element name="processField" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="PCode"></xs:enumeration>
+						<xs:enumeration value="processSummary"></xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="getWorkflowsResponse">
+		<xs:sequence>
+			<xs:element name="workflow" type="tns:workflowType" minOccurs="0"
+				maxOccurs="unbounded">
+				<xs:key name="workflowNameKey_internal">
+					<xs:selector xpath="name" />
+					<xs:field xpath="." />
+				</xs:key>
+				<xs:keyref name="processSummary_workflowNameKeyref_internal"
+					refer="tns:workflowNameKey_internal">
+					<xs:selector xpath="processSummary" />
+					<xs:field xpath="workflowName" />
+				</xs:keyref>
+
+				<xs:key name="actionKey">
+					<xs:selector xpath="action" />
+					<xs:field xpath="name" />
+				</xs:key>
+				<xs:keyref name="nextActionKeyRef" refer="tns:actionKey">
+					<xs:selector xpath="action" />
+					<xs:field xpath="nextAction" />
+				</xs:keyref>
+
+				<xs:keyref name="processSummary_actionNameKeyRef" refer="tns:actionKey">
+					<xs:selector
+						xpath="tns:processSummary/actionStatus/name|tns:processSummary/activeActionStatus/name|tns:processSummary/availableActionStatus/name|tns:processSummary/terminatedActionStatus/name" />
+					<xs:field xpath="." />
+				</xs:keyref>
+
+				<xs:unique name="dummy10">
+					<xs:selector xpath="PCode|processSummary/PCode" />
+					<xs:field xpath="." />
+				</xs:unique>
+
+
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="workflowType">
+		<xs:sequence>
+			<xs:element name="name" type="tns:Name" />
+			<xs:element name="action" type="tns:actionType" nillable="true"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xs:choice>
+				<xs:element name="PCode" type="tns:PCode" minOccurs="0"
+					maxOccurs="unbounded">
+				</xs:element>
+				<xs:element minOccurs="0" maxOccurs="unbounded" ref="tns:processSummary" />
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="actionType">
+		<xs:sequence>
+			<xs:element name="name" type="tns:Name" />
+			<xs:element name="automaticallyInstantiated" type="xs:boolean" />
+			<xs:element name="role" type="tns:Role" />
+			<xs:choice>
+				<xs:element name="nextAction" type="tns:Name" nillable="true"
+					minOccurs="0" maxOccurs="unbounded" />
+				<xs:element name="workflow" type="tns:Name" minOccurs="0" />
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="UnknownNames">
+		<xs:sequence>
+			<xs:element name="message" type="xs:string" minOccurs="0" />
+			<xs:element name="names" type="tns:Name" maxOccurs="unbounded"
+				minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="UnknownRoles">
+		<xs:sequence>
+			<xs:element name="message" type="xs:string" minOccurs="0" />
+			<xs:element name="roles" type="tns:Role" maxOccurs="unbounded"
+				minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="getWorkflowNames">
+		<xs:sequence />
+	</xs:complexType>
+
+	<xs:complexType name="getWorkflowNamesResponse">
+		<xs:sequence>
+			<xs:element name="name" type="tns:Name" minOccurs="0"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="Name">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-zA-Z][a-zA-Z0-9]*" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="PCode">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-zA-Z0-9]*" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="ACode">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-zA-Z0-9]*" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="ID">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-zA-Z0-9]*" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="Role">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-zA-Z ]*" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="getProcessSummaries">
+		<xs:sequence>
+			<xs:element name="restrictions" nillable="true">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="PCode" type="tns:PCode" minOccurs="0"
+							maxOccurs="unbounded">
+						</xs:element>
+						<xs:element name="workflowName" type="tns:Name"
+							minOccurs="0" maxOccurs="unbounded">
+						</xs:element>
+						<xs:element name="role" type="tns:Role" minOccurs="0"
+							maxOccurs="unbounded">
+						</xs:element>
+						<xs:element name="actor" type="tns:actorType" minOccurs="0"
+							maxOccurs="unbounded">
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+				<xs:unique name="dummy1">
+					<xs:selector xpath="PCode" />
+					<xs:field xpath="." />
+				</xs:unique>
+				<xs:unique name="dummy2">
+					<xs:selector xpath="workflowName" />
+					<xs:field xpath="." />
+				</xs:unique>
+				<xs:unique name="dummy3">
+					<xs:selector xpath="role" />
+					<xs:field xpath="." />
+				</xs:unique>
+				<xs:unique name="dummy4">
+					<xs:selector xpath="actor" />
+					<xs:field xpath="name" />
+					<xs:field xpath="role" />
+				</xs:unique>
+			</xs:element>
+			<xs:element name="fields" nillable="true">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="workflowName" type="xs:boolean"
+							minOccurs="0">
+						</xs:element>
+						<xs:element name="startTime" type="xs:boolean"
+							minOccurs="0">
+						</xs:element>
+						<xs:element name="actions" type="tns:actionsField"
+							minOccurs="0">
+						</xs:element>
+						<xs:element name="availableActions" type="tns:actionsField"
+							minOccurs="0">
+						</xs:element>
+						<xs:element name="activeActions" type="tns:actionsField"
+							minOccurs="0">
+						</xs:element>
+						<xs:element name="terminatedActions" type="tns:actionsField"
+							minOccurs="0">
+						</xs:element>
+						<xs:element name="actionFieldType" minOccurs="0">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="name"></xs:enumeration>
+									<xs:enumeration value="action"></xs:enumeration>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="getProcessSummariesResponse">
+		<xs:sequence>
+			<xs:element ref="tns:processSummary" minOccurs="0" maxOccurs="unbounded">
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:element name="processSummary" type="tns:processSummary">
+		<xs:unique name="dummy8">
+			<xs:selector
+				xpath="availableActionStatus|activeActionStatus|terminatedActionStatus" />
+			<xs:field xpath="ACode" />
+		</xs:unique>
+		<xs:unique name="dummy9">
+			<xs:selector xpath="actionStatus" />
+			<xs:field xpath="ACode" />
+		</xs:unique>
+	</xs:element>
+	
+	<xs:complexType name="processSummary">
+		<xs:sequence>
+			<xs:element name="PCode" type="tns:PCode"></xs:element>
+			<xs:element name="workflowName" type="tns:Name" minOccurs="0">
+			</xs:element>
+			<xs:element name="startTime" type="xs:dateTime" minOccurs="0">
+			</xs:element>
+			<xs:choice minOccurs="0">
+				<xs:element name="actions" type="xs:int"></xs:element>
+				<xs:element name="actionStatus" type="tns:actionStatusType"
+					minOccurs="0" maxOccurs="unbounded" nillable="true">
+				</xs:element>
+			</xs:choice>
+			<xs:choice minOccurs="0">
+				<xs:element name="availableActions" type="xs:int" />
+				<xs:element name="availableActionStatus" type="tns:actionStatusType"
+					minOccurs="0" maxOccurs="unbounded" nillable="true">
+				</xs:element>
+			</xs:choice>
+			<xs:choice minOccurs="0">
+				<xs:element name="activeActions" type="xs:int" />
+				<xs:element name="activeActionStatus" type="tns:actionStatusType"
+					minOccurs="0" maxOccurs="unbounded" nillable="true">
+				</xs:element>
+			</xs:choice>
+			<xs:choice minOccurs="0">
+				<xs:element name="terminatedActions" type="xs:int">
+				</xs:element>
+				<xs:element name="terminatedActionStatus" type="tns:actionStatusType"
+					minOccurs="0" maxOccurs="unbounded" nillable="true">
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="UnknownCodes">
+		<xs:sequence>
+			<xs:element name="message" type="xs:string" minOccurs="0"
+				maxOccurs="1">
+			</xs:element>
+			<xs:element name="codes" type="tns:PCode" minOccurs="0"
+				maxOccurs="unbounded"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="actionStatusType">
+		<xs:sequence>
+			<xs:element name="ACode" type="tns:ACode"></xs:element>
+			<xs:choice>
+				<xs:element name="name" type="tns:Name"></xs:element>
+				<xs:element name="action" type="tns:actionType"></xs:element>
+			</xs:choice>
+			<xs:element name="terminationTime" type="xs:dateTime"
+				minOccurs="0">
+			</xs:element>
+			<xs:element name="actor" type="tns:actorType" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="actorType">
+		<xs:sequence>
+			<xs:element name="name" type="tns:ActorName"></xs:element>
+			<xs:element name="role" type="tns:Role"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="ActorName">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-zA-Z]|[a-zA-Z][a-zA-Z ]*[a-zA-Z]">
+			</xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="takeInCharge" type="tns:takeInCharge">
+	</xs:element>
+	<xs:element name="takeInChargeResponse" type="tns:takeInChargeResponse">
+	</xs:element>
+	<xs:complexType name="takeInCharge">
+		<xs:sequence>
+			<xs:element name="requestID" type="tns:ID"></xs:element>
+			<xs:element name="PCode" type="tns:PCode" />
+			<xs:element name="ACode" type="tns:ACode" />
+			<xs:element name="actor" type="tns:actorType" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="takeInChargeResponse">
+		<xs:sequence>
+			<xs:element name="requestID" type="tns:ID"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="UnknownCode" type="tns:genericFault">
+	</xs:element>
+	
+	<xs:element name="UnknownName" type="tns:genericFault">
+	</xs:element>
+
+	<xs:element name="ActionFault" type="tns:genericFault"></xs:element>
+	<xs:element name="DifferentRole" type="tns:DifferentRole"></xs:element>
+
+	<xs:complexType name="DifferentRole">
+		<xs:sequence>
+			<xs:element name="expected" type="xs:string"></xs:element>
+			<xs:element name="received" type="xs:string"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="terminateAction" type="tns:terminateAction">
+		<xs:unique name="dummy11">
+			<xs:selector xpath="nextAction" />
+			<xs:field xpath="." />
+		</xs:unique>
+	</xs:element>
+	<xs:element name="terminateActionResponse" type="tns:terminateActionResponse">
+	</xs:element>
+
+	<xs:complexType name="terminateAction">
+		<xs:sequence>
+			<xs:element name="requestID" type="tns:ID"></xs:element>
+			<xs:element name="PCode" type="tns:PCode" />
+			<xs:element name="ACode" type="tns:ACode" />
+			<xs:element name="nextAction" type="tns:Name" minOccurs="0"
+				maxOccurs="unbounded"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:element name="getProcessSummaries" type="tns:getProcessSummaries"></xs:element>
+
+	<xs:element name="getProcessSummariesResponse" type="tns:getProcessSummariesResponse">
+		<xs:unique name="dummy5">
+			<xs:selector xpath="processSummary" />
+			<xs:field xpath="PCode" />
+		</xs:unique>
+	</xs:element>
+
+	<xs:element name="UnknownRoles" type="tns:UnknownRoles">
+		<xs:unique name="dummy14">
+			<xs:selector xpath="roles" />
+			<xs:field xpath="." />
+		</xs:unique>
+	</xs:element>
+
+	<xs:element name="ActorFault" type="tns:genericFault"></xs:element>
+
+	<xs:complexType name="terminateActionResponse">
+		<xs:sequence>
+			<xs:element name="requestID" type="tns:ID"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="actionsField">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="length"></xs:enumeration>
+			<xs:enumeration value="list"></xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	
+</xs:schema>

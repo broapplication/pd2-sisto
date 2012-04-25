@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:getProcessSummaries xmlns:tns="http://pad.polito.it/WorkflowRestricted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pad.polito.it/WorkflowRestricted WorkflowRestrictedService_schema.xsd ">
+	<restrictions>
+		<PCode>PCode</PCode>
+		<PCode>PCode1</PCode>
+		<workflowName>Name</workflowName>
+		<workflowName>Name1</workflowName>
+		<role>role</role>
+		<role>roleA</role>
+		<actor>
+			<name>name</name>
+			<role>role</role>
+		</actor>
+		<actor>
+			<name>name</name>
+			<role>roleA</role>
+		</actor>
+	</restrictions>
+	<fields>
+		<actions>length</actions>
+		<activeActions>list</activeActions>
+		<actionFieldType>action</actionFieldType></fields>
+</tns:getProcessSummaries>

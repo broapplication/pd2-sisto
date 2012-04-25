@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." default="run-server" name="WF_Ass5">
+
+	<!-- The random "WFMonitorFactory" -->
+	<property name="Random.WFMonitorFactory" value="it.polito.pd2.WF.Random.WorkflowMonitorFactoryImpl" />
+	<property name="it.polito.pd2.WF.sol5.URL" value="http://localhost:8181/WorkflowInfoService?wsdl"/>
+	<property name="WSDL" value="${it.polito.pd2.WF.sol5.URL}"/>
+	
+   	<property name="BASE" value="WorkflowInfo"/>
+	
+	<property name="WS.location" location="." />
+	<property name="lab5.location" location="." />
+
+	<property name="src.dir" location="${lab5.location}/src" />
+	<property name="lib.dir" location="${WS.location}/lib" />
+	<property name="build.dir" location="${lab5.location}/build" />
+	<property name="gen.dir" location="${lab5.location}/generated" />
+	<property name="package" value="it.polito.pd2.WF.sol5.gen"/>
+	
+	<path id="classpath">
+		<pathelement location="${build.dir}" />
+		<pathelement location="${lib.dir}/WFRandom.jar"/>
+		<pathelement location="${lib.dir}/junit-4.5.jar"/>
+		<pathelement location="${lib.dir}/WF.jar"/>
+		<pathelement location="${lib.dir}/lab5.jar"/>
+		
+	</path>
+	
+	<property name="testcase" value="0" />
+	<property name="seed" value="33333" />
+
+	<!-- Target setseed	-->
+	<target name="setseed" unless="seed">
+		<tstamp>
+			<format property="seed" pattern="HHmmss" />
+		</tstamp>
+	</target>
+	
+	<!-- Target init	-->
+	<target name="init">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${gen.dir}" />
+	</target>
+	
+	<!-- Target run-server	-->
+	<target name="run-server" depends="setseed">
+		<java fork="yes" jar="${lib.dir}/${BASE}Server.jar" dir=".">
+			<jvmarg line="-Dit.polito.pd2.WF.WorkflowMonitorFactory=${Random.WFMonitorFactory}" />
+			<sysproperty key="it.polito.pd2.WF.WorkflowMonitorFactory" value="${Random.WFMonitorFactory}" />
+			<sysproperty key="it.polito.pd2.WF.Random.seed" value="${seed}"/>
+			<sysproperty key="it.polito.pd2.WF.Random.testcase" value="${testcase}"/>
+		</java>
+	</target>
+	
+	<!-- define the "compile.wsdl" target -->
+	<target name="compile-wsdl">
+	    <echo message = "${it.polito.pd2.WF.sol5.URL}"/> 
+	    <exec executable="wsimport">
+	        <arg line="-d ${build.dir} -p ${package} -s ${gen.dir} -keep ${WSDL}"/>
+	    </exec>
+	</target>   
+	
+	<!-- Target buildClient -->
+	<target name="buildClient" depends="init, compile-wsdl">
+		<echo>Building the submitted solution (if needed)...</echo>
+		<javac destdir="${build.dir}" debug="true" debuglevel="source,lines,vars" source="1.6" target="1.6">
+			<src path="${src.dir}"/>
+			<include name="it/polito/pd2/WF/sol5/**" />
+			<classpath>
+				<path refid="classpath" />
+			</classpath>
+		</javac>
+		<echo>Done.</echo>
+	</target>
+
+	<!-- Target runFuncTest	-->
+	<target name="runFuncTest" depends="setseed">
+		<antcall target="runTest.real">
+			<param name="test.seed" value="${seed}" />
+			<param name="test.case" value="${testcase}" />
+			<param name="test.class" value="it.polito.pd2.WF.lab5.tests.WFMonitorTests" />
+		</antcall>
+	</target>
+
+	<!-- Target runEXcTest	-->
+	<target name="runExcTest" depends="setseed">
+		<antcall target="runTest.real">
+			<param name="test.seed" value="${seed}" />
+			<param name="test.case" value="0" /> <!-- test.case is always 0 in this case -->
+			<param name="test.class" value="it.polito.pd2.WF.lab5.tests.WFMonitorExcTests" />
+		</antcall>
+	</target>
+
+	<!-- Target runTest.real	-->
+	<target name="runTest.real" depends="buildClient">
+		<junit printsummary="yes" dir="." fork="yes" haltonfailure="no" showoutput="no" filtertrace="true">
+			<sysproperty key="it.polito.pd2.WF.Random.testcase" value="${test.case}"/>
+			<sysproperty key="it.polito.pd2.WF.Random.seed" value="${test.seed}"/>
+			<formatter type="brief" usefile="false"/>
+			<test haltonfailure="no" failureproperty="test_failed" name="${test.class}"/>
+			<classpath>
+				<path refid="classpath" />
+			</classpath>
+		</junit>
+		<fail if="test_failed" status="126" message="*** Tests FAILED ***"/>
+		<echo>*** Tests passed  ***</echo>
+		<delete dir="${temp.dir}"/>
+	</target>
+
+	<!-- Target clean	-->
+	<target name="clean">
+		<delete dir="${build.dir}" />
+	</target>
+
+</project>

@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema version="1.0" targetNamespace="http://pad.polito.it/WorkflowRestricted"
+	xmlns:tns="http://pad.polito.it/WorkflowRestricted" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="getWorkflowNames" type="tns:getWorkflowNames" />
+	<xsd:element name="getWorkflowNamesResponse" type="tns:getWorkflowNamesResponse">
+		
+        <xsd:unique name="dummy6">
+			
+            <xsd:selector xpath="name" />
+            
+            <xsd:field xpath="." />
+        </xsd:unique>
+    </xsd:element>
+	<xsd:element name="GenericFault" type="tns:genericFault" />
+
+	<xsd:element name="getWorkflows" type="tns:getWorkflows">
+		
+        <xsd:unique name="dummy7">
+			
+            <xsd:selector xpath="name" />
+            
+            <xsd:field xpath="." />
+        </xsd:unique>
+    </xsd:element>
+	<xsd:element name="getWorkflowsResponse" type="tns:getWorkflowsResponse">
+		
+        <xsd:key name="workflowNameKey">
+			
+            <xsd:selector xpath="workflow" />
+            
+            <xsd:field xpath="name" />
+        </xsd:key>
+    </xsd:element>
+	<xsd:element name="UnknownNames" type="tns:UnknownNames">
+		
+        <xsd:unique name="dummy13">
+			
+            <xsd:selector xpath="names" />
+            
+            <xsd:field xpath="." />
+        </xsd:unique>
+    </xsd:element>
+	<xsd:element name="UnknownCodes" type="tns:UnknownCodes">
+		
+        <xsd:unique name="dummy12">
+			
+            <xsd:selector xpath="codes" />
+            
+            <xsd:field xpath="." />
+        </xsd:unique>
+    </xsd:element>
+
+	<xsd:complexType name="genericFault">
+		<xsd:sequence>
+			<xsd:element name="errno" type="xsd:int"></xsd:element>
+			<xsd:element name="message" type="xsd:string" minOccurs="0"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="getWorkflows">
+		<xsd:sequence>
+			<xsd:element name="name" type="tns:Name" minOccurs="0" maxOccurs="unbounded" />
+			<xsd:element name="processField" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:enumeration value="PCode"></xsd:enumeration>
+						<xsd:enumeration value="processSummary"></xsd:enumeration>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="getWorkflowsResponse">
+		<xsd:sequence>
+			<xsd:element name="workflow" type="tns:workflowType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:key name="workflowNameKey_internal">
+					<xsd:selector xpath="name" />
+					<xsd:field xpath="." />
+				</xsd:key>
+				<xsd:keyref name="processSummary_workflowNameKeyref_internal" refer="tns:workflowNameKey_internal">
+					<xsd:selector xpath="processSummary" />
+					<xsd:field xpath="workflowName" />
+				</xsd:keyref>
+
+				<xsd:key name="actionKey">
+					<xsd:selector xpath="action" />
+					<xsd:field xpath="name" />
+				</xsd:key>
+				<xsd:keyref name="nextActionKeyRef" refer="tns:actionKey">
+					<xsd:selector xpath="action" />
+					<xsd:field xpath="nextAction" />
+				</xsd:keyref>
+
+				<xsd:keyref name="processSummary_actionNameKeyRef" refer="tns:actionKey">
+					<xsd:selector xpath="tns:processSummary/actionStatus/name|tns:processSummary/activeActionStatus/name|tns:processSummary/availableActionStatus/name|tns:processSummary/terminatedActionStatus/name" />
+					<xsd:field xpath="." />
+				</xsd:keyref>
+
+				<xsd:unique name="dummy10">
+					<xsd:selector xpath="PCode|processSummary/PCode" />
+					<xsd:field xpath="." />
+				</xsd:unique>
+
+
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="workflowType">
+		<xsd:sequence>
+			<xsd:element name="name" type="tns:Name" />
+			<xsd:element name="action" type="tns:actionType" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+			<xsd:choice>
+				<xsd:element name="PCode" type="tns:PCode" minOccurs="0" maxOccurs="unbounded">
+				</xsd:element>
+				<xsd:element minOccurs="0" maxOccurs="unbounded" ref="tns:processSummary" />
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="actionType">
+		<xsd:sequence>
+			<xsd:element name="name" type="tns:Name" />
+			<xsd:element name="automaticallyInstantiated" type="xsd:boolean" />
+			<xsd:element name="role" type="tns:Role" />
+			<xsd:choice>
+				<xsd:element name="nextAction" type="tns:Name" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element name="workflow" type="tns:Name" minOccurs="0" />
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="UnknownNames">
+		<xsd:sequence>
+			<xsd:element name="message" type="xsd:string" minOccurs="0" />
+			<xsd:element name="names" type="tns:Name" maxOccurs="unbounded" minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="UnknownRoles">
+		<xsd:sequence>
+			<xsd:element name="message" type="xsd:string" minOccurs="0" />
+			<xsd:element name="roles" type="tns:Role" maxOccurs="unbounded" minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="getWorkflowNames">
+		<xsd:sequence />
+	</xsd:complexType>
+
+	<xsd:complexType name="getWorkflowNamesResponse">
+		<xsd:sequence>
+			<xsd:element name="name" type="tns:Name" minOccurs="0" maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:simpleType name="Name">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[a-zA-Z][a-zA-Z0-9]*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="PCode">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[a-zA-Z0-9]*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="ACode">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[a-zA-Z0-9]*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="ID">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[a-zA-Z0-9]*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="Role">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[a-zA-Z ]*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:complexType name="getProcessSummaries">
+		<xsd:sequence>
+			<xsd:element name="restrictions" nillable="true">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="PCode" type="tns:PCode" minOccurs="0" maxOccurs="unbounded">
+						</xsd:element>
+						<xsd:element name="workflowName" type="tns:Name" minOccurs="0" maxOccurs="unbounded">
+						</xsd:element>
+						<xsd:element name="role" type="tns:Role" minOccurs="0" maxOccurs="unbounded">
+						</xsd:element>
+						<xsd:element name="actor" type="tns:actorType" minOccurs="0" maxOccurs="unbounded">
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+				<xsd:unique name="dummy1">
+					<xsd:selector xpath="PCode" />
+					<xsd:field xpath="." />
+				</xsd:unique>
+				<xsd:unique name="dummy2">
+					<xsd:selector xpath="workflowName" />
+					<xsd:field xpath="." />
+				</xsd:unique>
+				<xsd:unique name="dummy3">
+					<xsd:selector xpath="role" />
+					<xsd:field xpath="." />
+				</xsd:unique>
+				<xsd:unique name="dummy4">
+					<xsd:selector xpath="actor" />
+					<xsd:field xpath="name" />
+					<xsd:field xpath="role" />
+				</xsd:unique>
+			</xsd:element>
+			<xsd:element name="fields" nillable="true">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="workflowName" type="xsd:boolean" minOccurs="0">
+						</xsd:element>
+						<xsd:element name="startTime" type="xsd:boolean" minOccurs="0">
+						</xsd:element>
+						<xsd:element name="actions" type="tns:actionsField" minOccurs="0">
+						</xsd:element>
+						<xsd:element name="availableActions" type="tns:actionsField" minOccurs="0">
+						</xsd:element>
+						<xsd:element name="activeActions" type="tns:actionsField" minOccurs="0">
+						</xsd:element>
+						<xsd:element name="terminatedActions" type="tns:actionsField" minOccurs="0">
+						</xsd:element>
+						<xsd:element name="actionFieldType" minOccurs="0">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:enumeration value="name"></xsd:enumeration>
+									<xsd:enumeration value="action"></xsd:enumeration>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="getProcessSummariesResponse">
+		<xsd:sequence>
+			<xsd:element ref="tns:processSummary" minOccurs="0" maxOccurs="unbounded">
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:element name="processSummary" type="tns:processSummary">
+		
+        <xsd:unique name="dummy8">
+			
+            <xsd:selector xpath="availableActionStatus|activeActionStatus|terminatedActionStatus" />
+            
+            <xsd:field xpath="ACode" />
+        </xsd:unique>
+        
+        <xsd:unique name="dummy9">
+			
+            <xsd:selector xpath="actionStatus" />
+            
+            <xsd:field xpath="ACode" />
+        </xsd:unique>
+    </xsd:element>
+	
+	<xsd:complexType name="processSummary">
+		<xsd:sequence>
+			<xsd:element name="PCode" type="tns:PCode"></xsd:element>
+			<xsd:element name="workflowName" type="tns:Name" minOccurs="0">
+			</xsd:element>
+			<xsd:element name="startTime" type="xsd:dateTime" minOccurs="0">
+			</xsd:element>
+			<xsd:choice minOccurs="0">
+				<xsd:element name="actions" type="xsd:int"></xsd:element>
+				<xsd:element name="actionStatus" type="tns:actionStatusType" minOccurs="0" maxOccurs="unbounded" nillable="true">
+				</xsd:element>
+			</xsd:choice>
+			<xsd:choice minOccurs="0">
+				<xsd:element name="availableActions" type="xsd:int" />
+				<xsd:element name="availableActionStatus" type="tns:actionStatusType" minOccurs="0" maxOccurs="unbounded" nillable="true">
+				</xsd:element>
+			</xsd:choice>
+			<xsd:choice minOccurs="0">
+				<xsd:element name="activeActions" type="xsd:int" />
+				<xsd:element name="activeActionStatus" type="tns:actionStatusType" minOccurs="0" maxOccurs="unbounded" nillable="true">
+				</xsd:element>
+			</xsd:choice>
+			<xsd:choice minOccurs="0">
+				<xsd:element name="terminatedActions" type="xsd:int">
+				</xsd:element>
+				<xsd:element name="terminatedActionStatus" type="tns:actionStatusType" minOccurs="0" maxOccurs="unbounded" nillable="true">
+				</xsd:element>
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="UnknownCodes">
+		<xsd:sequence>
+			<xsd:element name="message" type="xsd:string" minOccurs="0" maxOccurs="1">
+			</xsd:element>
+			<xsd:element name="codes" type="tns:PCode" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="actionStatusType">
+		<xsd:sequence>
+			<xsd:element name="ACode" type="tns:ACode"></xsd:element>
+			<xsd:choice>
+				<xsd:element name="name" type="tns:Name"></xsd:element>
+				<xsd:element name="action" type="tns:actionType"></xsd:element>
+			</xsd:choice>
+			<xsd:element name="terminationTime" type="xsd:dateTime" minOccurs="0">
+			</xsd:element>
+			<xsd:element name="actor" type="tns:actorType" minOccurs="0"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="actorType">
+		<xsd:sequence>
+			<xsd:element name="name" type="tns:ActorName"></xsd:element>
+			<xsd:element name="role" type="tns:Role"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:simpleType name="ActorName">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[a-zA-Z]|[a-zA-Z][a-zA-Z ]*[a-zA-Z]">
+			</xsd:pattern>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:element name="takeInCharge" type="tns:takeInCharge">
+	</xsd:element>
+	<xsd:element name="takeInChargeResponse" type="tns:takeInChargeResponse">
+	</xsd:element>
+	<xsd:complexType name="takeInCharge">
+		<xsd:sequence>
+			<xsd:element name="requestID" type="tns:ID"></xsd:element>
+			<xsd:element name="PCode" type="tns:PCode" />
+			<xsd:element name="ACode" type="tns:ACode" />
+			<xsd:element name="actor" type="tns:actorType" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="takeInChargeResponse">
+		<xsd:sequence>
+			<xsd:element name="requestID" type="tns:ID"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="UnknownCode" type="tns:genericFault">
+	</xsd:element>
+	
+	<xsd:element name="UnknownName" type="tns:genericFault">
+	</xsd:element>
+
+	<xsd:element name="ActionFault" type="tns:genericFault"></xsd:element>
+	<xsd:element name="DifferentRole" type="tns:DifferentRole"></xsd:element>
+
+	<xsd:complexType name="DifferentRole">
+		<xsd:sequence>
+			<xsd:element name="expected" type="xsd:string"></xsd:element>
+			<xsd:element name="received" type="xsd:string"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="terminateAction" type="tns:terminateAction">
+		
+        <xsd:unique name="dummy11">
+			
+            <xsd:selector xpath="nextAction" />
+            
+            <xsd:field xpath="." />
+        </xsd:unique>
+    </xsd:element>
+	<xsd:element name="terminateActionResponse" type="tns:terminateActionResponse">
+	</xsd:element>
+
+	<xsd:complexType name="terminateAction">
+		<xsd:sequence>
+			<xsd:element name="requestID" type="tns:ID"></xsd:element>
+			<xsd:element name="PCode" type="tns:PCode" />
+			<xsd:element name="ACode" type="tns:ACode" />
+			<xsd:element name="nextAction" type="tns:Name" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+
+	<xsd:element name="getProcessSummaries" type="tns:getProcessSummaries"></xsd:element>
+
+	<xsd:element name="getProcessSummariesResponse" type="tns:getProcessSummariesResponse">
+		
+        <xsd:unique name="dummy5">
+			
+            <xsd:selector xpath="processSummary" />
+            
+            <xsd:field xpath="PCode" />
+        </xsd:unique>
+    </xsd:element>
+
+	<xsd:element name="UnknownRoles" type="tns:UnknownRoles">
+		
+        <xsd:unique name="dummy14">
+			
+            <xsd:selector xpath="roles" />
+            
+            <xsd:field xpath="." />
+        </xsd:unique>
+    </xsd:element>
+
+	<xsd:element name="ActorFault" type="tns:genericFault"></xsd:element>
+
+	<xsd:complexType name="terminateActionResponse">
+		<xsd:sequence>
+			<xsd:element name="requestID" type="tns:ID"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:simpleType name="actionsField">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="length"></xsd:enumeration>
+			<xsd:enumeration value="list"></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+<xsd:schema></xsd:schema>

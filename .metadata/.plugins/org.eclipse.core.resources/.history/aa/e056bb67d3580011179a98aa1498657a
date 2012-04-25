@@ -1,0 +1,268 @@
+<?xml version="1.0"?>
+
+<!-- 
+-->
+<project basedir="." default="run.server" name="WF_Ass6">
+	<property name="Random.WFMonitorFactory" value="it.polito.pd2.WF.Random.WorkflowMonitorFactoryImpl" />
+	<property name="jversion" value="1.6" />
+	<property name="source" value="1.6" />
+	<property name="testcase" value="2"/>
+	
+	<!-- define directories -->
+	<property name="src.dir" location="${basedir}/src"/>
+	<property name="service.src.dir" location="${src.dir}/it/polito/pd2/WF/sol6/service"/>
+	<property name="client1.src.dir" location="${src.dir}/it/polito/pd2/WF/sol6/client1"/>
+	<property name="client2.src.dir" location="${src.dir}/it/polito/pd2/WF/sol6/client2"/>
+	
+	<property name="gen.dir" location="${basedir}/generated"/>
+	<property name="service.gen.dir" location="${gen.dir}/service"/>
+	<property name="client1.gen.dir" location="${gen.dir}/client1"/>
+	<property name="client2.gen.dir" location="${gen.dir}/client2"/>
+	
+	<property name="gen-src.dir" location="${gen.dir}/gen-src"/>
+	<property name="service.gen-src.dir" location="${gen-src.dir}/service"/>
+	<property name="client1.gen-src.dir" location="${gen-src.dir}/client1"/>
+	<property name="client2.gen-src.dir" location="${gen-src.dir}/client2"/>
+	
+	<property name="build.dir" location="${basedir}/build"/>
+	<property name="lib.dir" location="${basedir}/lib"/>
+	<property name="wsdl.dir" location="${basedir}/wsdl"/>
+	<property name="jaxws.wsdl.dir" location="${gen.dir}/wsdl/jaxws"/>
+	
+	<!-- define WSDL and ENDPOINT -->
+	
+	<property name="main.wsdl.filename" value="WorkflowService.wsdl"/>
+	<property name="restricted.wsdl.filename" value="WorkflowRestrictedService.wsdl"/>
+	<property name="restricted.xsd.filename" value="WorkflowRestrictedService.wsdl"/>
+	
+	<fileset dir="${wsdl.dir}" id="wsdl.fileset">
+    	<include name="${main.wsdl.filename}"/>
+		<!-- 
+		<include name="${restricted.wsdl.filename}"/>
+		<include name="${restricted.xsd.filename}"/>
+		-->
+	</fileset>
+	
+	<property name="jaxws.WF.endpoint" 
+			value="http://localhost:8181/WorkflowService"/>
+	<property name="jaxws.WFINFO.endpoint" 
+			value="http://localhost:8182/WorkflowService"/>
+	<property name="jaxws.PROC.endpoint" 
+			value="http://localhost:8183/WorkflowService"/>
+	
+	<property name="client1.WSDL" value="${jaxws.WFINFO.endpoint}?wsdl"/>
+	<property name="client2.WSDL" value="${jaxws.WF.endpoint}?wsdl"/>
+	<property name="client1.WSDL.offline" value="${wsdl.dir}\${main.wsdl.filename}"/>
+	<property name="client2.WSDL.offline" value="${wsdl.dir}\${main.wsdl.filename}"/>
+	
+
+	<!-- define PACKAGES and CLASS names -->
+	<property name="service.package"
+	      	  value="it.polito.pd2.WF.sol6.service"/>
+	<property name="service.gen.package"
+			  value="it.polito.pd2.WF.sol6.service.gen"/>
+	<property name="client1.gen.package"
+			  value="it.polito.pd2.WF.sol6.client1.gen"/>
+	<property name="client2.gen.package"
+			  value="it.polito.pd2.WF.sol6.client2.gen"/>
+	
+	<property name="WFINFO.service.class"
+		      value="WorkflowInfoServiceImpl"/>
+	<property name="WFINFO.service.name"
+			  value="WorkflowInfoService"/>
+	<property name="WF.service.class"
+		      value="WorkflowServiceImpl"/>
+	<property name="WF.service.name"
+			  value="WorkflowService"/>
+	<property name="PROC.service.class"
+			  value="ProcessServiceImpl"/>
+	<property name="PROC.service.name"
+			  value="ProcessService"/>
+	
+	<property name="server.class"
+			  value="WorkflowServer"/>
+	
+	<!-- define the "setseed" target -->
+	<target name="setseed" unless="seed">
+		<tstamp>
+			<format property="seed" pattern="HHmmss" />
+		</tstamp>
+	</target>
+
+	<!-- define the "init" target -->
+	<target name="init">
+		<mkdir dir="${gen.dir}"/>
+		<mkdir dir="${gen-src.dir}"/>
+	    <mkdir dir="${build.dir}"/>
+	</target>
+	
+	<!-- define the "clean" target -->
+	<target name="clean">
+		<delete dir="${gen.dir}"/>
+		<delete dir="${build.dir}"/>
+	</target>	
+
+	
+	<!-- ################## SERVICE ################################ -->
+	
+	<!-- define the execution classpath for jaxws server -->
+	<path id="service.classpath">
+	    <pathelement path="${build.dir}" />
+		<pathelement location="${lib.dir}/WFRandom.jar"/>
+		<pathelement location="${lib.dir}/junit-4.5.jar"/>
+		<pathelement location="${lib.dir}/WF.jar"/>
+		<pathelement location="${lib.dir}/lab6.jar"/>
+	</path>
+
+	<!-- define the "init.service" target -->
+	<target name="init.service">
+		<!-- make directories -->
+		<mkdir dir="${service.gen.dir}"/>
+		<mkdir dir="${service.gen-src.dir}"/>
+		<mkdir dir="${build.dir}/META-INF"/>
+		<mkdir dir="${jaxws.wsdl.dir}"/>
+		
+		<!-- configure wsdl files with endpoint addresses -->		
+		<copy toDir="${jaxws.wsdl.dir}" overwrite="true">
+			<fileset refid="wsdl.fileset"/>
+		</copy>
+		<replace file="${jaxws.wsdl.dir}/${main.wsdl.filename}">
+			<replacefilter 
+				token="WF_REPLACE_WITH_ACTUAL_URL"
+				value="${jaxws.WF.endpoint}"/>
+			<replacefilter
+				token="WFINFO_REPLACE_WITH_ACTUAL_URL"
+				value="${jaxws.WFINFO.endpoint}"/>
+			<replacefilter
+				token="PROC_REPLACE_WITH_ACTUAL_URL"
+				value="${jaxws.PROC.endpoint}"/>
+		</replace>
+		<!--
+		<replace file="${jaxws.wsdl.dir}/${restricted.wsdl.filename}">
+			<replacefilter
+				token="WFINFO_REPLACE_WITH_ACTUAL_URL"
+				value="${jaxws.WFINFO.endpoint}"/>
+			<replacefilter
+				token="PROC_REPLACE_WITH_ACTUAL_URL"
+				value="${jaxws.PROC.endpoint}"/>
+		</replace>
+		-->
+	</target>  
+		
+	<!-- define the "compile.wsdl.service" target -->
+	<target name="compile.wsdl.service" depends="init.service">
+		<property name="WSDL"
+			   	  location="${jaxws.wsdl.dir}/${main.wsdl.filename}"/>
+		
+		<exec executable="wsimport">
+	    	<arg line="-d ${service.gen.dir} -p ${service.gen.package} -s ${service.gen-src.dir} -keep ${WSDL}"/>
+		</exec>
+	</target>   
+		
+	<!-- define the "build.service" target -->
+	<target name="build.service" depends="compile.wsdl.service">
+		<!-- copy wsdl file to META-INF directory -->
+		<copy todir="${build.dir}" overwrite="true">
+			<fileset dir="${service.gen.dir}">
+				<include name="**"/>
+			</fileset>
+		</copy>
+		<copy toDir="${build.dir}/META-INF" overwrite="true">
+		   	<fileset dir="${jaxws.wsdl.dir}">
+		  		<include name="*"/>
+			</fileset>
+		</copy>
+		<javac debug="on" source="${source}" target="${jversion}" fork="true"
+			destdir="${build.dir}" 
+			srcdir="${service.src.dir}">
+			<classpath refid="service.classpath"/>
+		 </javac>
+	</target>
+		
+	<!-- define the "run.server" target -->
+	<target name="run.server" depends="build.service, setseed">
+		<echo></echo>
+		<java classname="${service.package}.${server.class}" failonerror="true" fork="true">
+			<sysproperty key="it.polito.pd2.WF.WorkflowMonitorFactory" value="${Random.WFMonitorFactory}" />
+			<sysproperty key="it.polito.pd2.WF.Random.seed" value="${seed}"/>
+			<sysproperty key="it.polito.pd2.WF.Random.testcase" value="${testcase}"/>
+			<sysproperty key="WORKFLOW_SERVICE" value="${jaxws.WF.endpoint}"/>
+			<sysproperty key="WORKFLOW_INFO_SERVICE" value="${jaxws.WFINFO.endpoint}"/>
+			<sysproperty key="PROCESS_SERVICE" value="${jaxws.PROC.endpoint}"/>
+	    	<classpath refid="service.classpath"/>
+		</java>
+	</target>
+	
+	<!-- define the "stop.server" target -->
+	<target name="stop.server">
+	    <exec executable="jps" output="pid.out.file"/>
+		<loadfile srcfile="pid.out.file" property="pid.out">
+		  <filterchain>
+				<linecontains>
+				  <contains value="${server.class}"/>
+				</linecontains>
+				<tokenfilter>
+					<deletecharacters chars="WorkflowService"/>
+					<trim/>
+					<ignoreblank/>
+				</tokenfilter>
+				<striplinebreaks/>
+		  </filterchain>
+		</loadfile>
+		<exec executable="taskkill">
+			<arg value="/F"/>
+			<arg value="/PID"/>
+			<arg value="${pid.out}"/>
+		</exec>
+		<delete file="pid.out.file"/>
+	</target>
+	
+	
+	<!-- define the "clean.service" target -->
+	<target name="clean.service">
+		<delete dir="${service.gen.dir}"/>
+		<delete dir="${service.gen-src.dir}"/>
+		<delete dir="${build.dir}/META-INF"/>
+		<delete dir="${jaxws.wsdl.dir}"/>
+	</target>
+
+	<!-- ################## CLIENT 1 ################################ -->
+	
+	<!-- define the execution classpath for client 1 -->
+	<path id="client1.classpath">
+	    <pathelement path="${build.dir}" />
+		<pathelement location="${lib.dir}/WF.jar"/>
+	</path>
+
+	<!-- define the "init.client1" target -->
+	<target name="init.client1" depends="clean.client1">
+		<!-- make directories -->
+		<mkdir dir="${client1.gen.dir}"/>
+		<mkdir dir="${client1.gen-src.dir}"/>
+	</target>  
+		
+	<!-- define the "compile.wsdl.client1" target -->
+	<target name="compile.wsdl.client1" depends="init.client1">
+		<exec executable="wsimport">
+	    	<arg line="-d ${client1.gen.dir} -p ${client1.gen.package} -s ${client1.gen-src.dir} -keep ${client1.WSDL}"/>
+		</exec>
+	</target>   
+		
+	<!-- define the "build.client1" target -->
+	<target name="build.client1" depends="compile.wsdl.client1">
+		<javac debug="on" source="${source}" target="${jversion}" fork="true"
+			destdir="${build.dir}" 
+			srcdir="${client1.src.dir}">
+			<classpath refid="client1.classpath"/>
+		 </javac>
+	</target>	
+	
+	<!-- define the "clean.client1" target -->
+	<target name="clean.client1">
+		<delete dir="${client1.gen.dir}"/>
+		<delete dir="${client1.gen-src.dir}"/>
+	</target>
+
+	<!-- ################## CLIENT 2 ################################ -->
+
+</project>

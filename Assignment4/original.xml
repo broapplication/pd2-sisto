@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<workflowMonitor xmlns="http://www.example.org/wfInfo">
+    <workflow name="RedazioneArticolo">
+        <simpleAction role="Redattore" name="Pubblicazione" automaticallyIstantiated="false"/>
+        <simpleAction role="Giornalista" name="Revisione" automaticallyIstantiated="false">
+            <possibleNextAction>Controllo</possibleNextAction>
+        </simpleAction>
+        <simpleAction role="Giornalista" name="Scrittura" automaticallyIstantiated="true">
+            <possibleNextAction>Controllo</possibleNextAction>
+        </simpleAction>
+        <simpleAction role="Redattore" name="Controllo" automaticallyIstantiated="false">
+            <possibleNextAction>Revisione</possibleNextAction>
+            <possibleNextAction>Pubblicazione</possibleNextAction>
+        </simpleAction>
+        <process startTime="2008-01-18T03:44:00+01:00">
+            <actionStatus action="Scrittura">
+                <actor role="Giornalista" name="Marco Elkan"/>
+            </actionStatus>
+        </process>
+        <process startTime="2008-02-03T02:09:00+01:00">
+            <actionStatus terminationTime="2008-02-03T16:26:00+01:00" action="Scrittura">
+                <actor role="Giornalista" name="Paola De Palma"/>
+            </actionStatus>
+            <actionStatus action="Controllo">
+                <actor role="Redattore" name="Riccardo Prisco"/>
+            </actionStatus>
+        </process>
+    </workflow>
+    <workflow name="VenditaNormale">
+        <simpleAction role="Contabile" name="EmissFattura" automaticallyIstantiated="true">
+            <possibleNextAction>RicezPagamento</possibleNextAction>
+        </simpleAction>
+        <simpleAction role="Contabile" name="RicezPagamento" automaticallyIstantiated="false"/>
+        <simpleAction role="Magazziniere" name="ConsegnaMerce" automaticallyIstantiated="true"/>
+        <process startTime="2008-02-06T15:09:00+01:00">
+            <actionStatus terminationTime="2008-02-08T06:44:00+01:00" action="ConsegnaMerce">
+                <actor role="Magazziniere" name="Anna Manzoni"/>
+            </actionStatus>
+            <actionStatus terminationTime="2008-02-08T21:27:00+01:00" action="EmissFattura">
+                <actor role="Contabile" name="Caio Pascal"/>
+            </actionStatus>
+            <actionStatus terminationTime="2008-02-10T20:55:00+01:00" action="RicezPagamento">
+                <actor role="Contabile" name="Marta Perla"/>
+            </actionStatus>
+        </process>
+        <process startTime="2008-02-09T01:03:00+01:00">
+            <actionStatus action="ConsegnaMerce">
+                <actor role="Magazziniere" name="Anna Manzoni"/>
+            </actionStatus>
+            <actionStatus terminationTime="2008-02-09T05:50:00+01:00" action="EmissFattura">
+                <actor role="Contabile" name="Marta Perla"/>
+            </actionStatus>
+            <actionStatus terminationTime="2008-02-09T16:06:00+01:00" action="RicezPagamento">
+                <actor role="Contabile" name="Marta Perla"/>
+            </actionStatus>
+        </process>
+        <process startTime="2008-01-14T16:17:00+01:00">
+            <actionStatus terminationTime="2008-01-14T20:59:00+01:00" action="ConsegnaMerce">
+                <actor role="Magazziniere" name="Anna Manzoni"/>
+            </actionStatus>
+            <actionStatus terminationTime="2008-01-15T13:12:00+01:00" action="EmissFattura">
+                <actor role="Contabile" name="Caio Pascal"/>
+            </actionStatus>
+            <actionStatus action="RicezPagamento">
+                <actor role="Contabile" name="Caio Pascal"/>
+            </actionStatus>
+        </process>
+        <process startTime="2008-02-06T08:12:00+01:00">
+            <actionStatus terminationTime="2008-02-06T20:39:00+01:00" action="ConsegnaMerce">
+                <actor role="Magazziniere" name="Alessia Garibaldi"/>
+            </actionStatus>
+            <actionStatus terminationTime="2008-02-08T13:04:00+01:00" action="EmissFattura">
+                <actor role="Contabile" name="Paolo Bianchi"/>
+            </actionStatus>
+            <actionStatus action="RicezPagamento"/>
+        </process>
+        <process startTime="2008-01-15T04:03:00+01:00">
+            <actionStatus terminationTime="2008-01-17T02:00:00+01:00" action="ConsegnaMerce">
+                <actor role="Magazziniere" name="Alessia Garibaldi"/>
+            </actionStatus>
+            <actionStatus terminationTime="2008-01-17T14:37:00+01:00" action="EmissFattura">
+                <actor role="Contabile" name="Paolo Bianchi"/>
+            </actionStatus>
+            <actionStatus action="RicezPagamento">
+                <actor role="Contabile" name="Paolo Bianchi"/>
+            </actionStatus>
+        </process>
+        <process startTime="2008-01-25T13:44:00+01:00">
+            <actionStatus action="ConsegnaMerce"/>
+            <actionStatus action="EmissFattura"/>
+        </process>
+    </workflow>
+    <workflow name="GestioneVendita">
+        <processAction actionWorkflow="VenditaPagAnt" role="RespVendite" name="VenditaPagAnt" automaticallyIstantiated="false"/>
+        <simpleAction role="AddettoVendite" name="AccettazOrdine" automaticallyIstantiated="true">
+            <possibleNextAction>VenditaPagAnt</possibleNextAction>
+            <possibleNextAction>VenditaNormale</possibleNextAction>
+        </simpleAction>
+        <processAction actionWorkflow="VenditaNormale" role="RespVendite" name="VenditaNormale" automaticallyIstantiated="false"/>
+        <process startTime="2008-01-29T17:47:00+01:00">
+            <actionStatus terminationTime="2008-01-31T12:35:00+01:00" action="AccettazOrdine">
+                <actor role="AddettoVendite" name="Francesca Servini"/>
+            </actionStatus>
+            <actionStatus terminationTime="2008-02-01T22:33:00+01:00" action="VenditaPagAnt">
+                <actor role="RespVendite" name="Eva Piccoli"/>
+            </actionStatus>
+        </process>
+        <process startTime="2008-01-21T17:18:00+01:00">
+            <actionStatus action="AccettazOrdine">
+                <actor role="AddettoVendite" name="Mauro Rossi"/>
+            </actionStatus>
+        </process>
+        <process startTime="2008-02-05T20:24:00+01:00">
+            <actionStatus terminationTime="2008-02-06T14:07:00+01:00" action="AccettazOrdine">
+                <actor role="AddettoVendite" name="Francesca Servini"/>
+            </actionStatus>
+            <actionStatus terminationTime="2008-02-06T16:43:00+01:00" action="VenditaPagAnt">
+                <actor role="RespVendite" name="Eva Piccoli"/>
+            </actionStatus>
+        </process>
+        <process startTime="2008-01-30T15:14:00+01:00">
+            <actionStatus terminationTime="2008-01-31T19:44:00+01:00" action="AccettazOrdine">
+                <actor role="AddettoVendite" name="Marco Gonzales"/>
+            </actionStatus>
+            <actionStatus action="VenditaPagAnt"/>
+        </process>
+    </workflow>
+    <workflow name="VenditaPagAnt">
+        <simpleAction role="Magazziniere" name="ConsegnaMerce" automaticallyIstantiated="false"/>
+        <simpleAction role="Contabile" name="EmissFattura" automaticallyIstantiated="true">
+            <possibleNextAction>RicezPagamento</possibleNextAction>
+        </simpleAction>
+        <simpleAction role="Contabile" name="RicezPagamento" automaticallyIstantiated="false">
+            <possibleNextAction>ConsegnaMerce</possibleNextAction>
+        </simpleAction>
+        <process startTime="2008-01-29T23:19:00+01:00">
+            <actionStatus terminationTime="2008-01-31T22:37:00+01:00" action="EmissFattura">
+                <actor role="Contabile" name="Ludovico Pascal"/>
+            </actionStatus>
+            <actionStatus action="RicezPagamento"/>
+        </process>
+        <process startTime="2008-01-28T07:14:00+01:00">
+            <actionStatus terminationTime="2008-01-30T01:27:00+01:00" action="EmissFattura">
+                <actor role="Contabile" name="Claudio Trapani"/>
+            </actionStatus>
+            <actionStatus terminationTime="2008-01-30T21:11:00+01:00" action="RicezPagamento">
+                <actor role="Contabile" name="Giovanni Neri"/>
+            </actionStatus>
+            <actionStatus terminationTime="2008-02-01T22:17:00+01:00" action="ConsegnaMerce">
+                <actor role="Magazziniere" name="Caio Rossi"/>
+            </actionStatus>
+        </process>
+    </workflow>
+</workflowMonitor>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions name="WorkflowService"
+	targetNamespace="http://pad.polito.it/Workflow" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://pad.polito.it/Workflow" xmlns:restr="http://pad.polito.it/WorkflowRestricted" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+	<import location="WorkflowRestrictedService.wsdl"
+		namespace="http://pad.polito.it/WorkflowRestricted" />
+
+	<types>
+
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://pad.polito.it/Workflow" xmlns:restr="http://pad.polito.it/WorkflowRestricted">
+			<xsd:import namespace="http://pad.polito.it/WorkflowRestricted"
+				schemaLocation="WorkflowRestrictedService_schema.xsd" />
+			<xsd:element name="newProcess" type="tns:newProcess">
+			</xsd:element>
+			<xsd:element name="newProcessResponse" type="tns:newProcessResponse">
+			</xsd:element>
+			<xsd:complexType name="newProcess">
+				<xsd:sequence>
+					<xsd:element name="requestID" type="restr:ID"></xsd:element>
+					<xsd:element name="workflowName"
+						type="restr:Name">
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="newProcessResponse">
+				<xsd:sequence>
+					<xsd:element name="requestID" type="restr:ID"></xsd:element>
+					<xsd:element name="processSummary"
+						type="restr:processSummary">
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+        </xsd:schema>
+	</types>
+	<message name="newProcess">
+		<part name="parameters" element="tns:newProcess"></part>
+	</message>
+	<message name="newProcessResponse">
+		<part name="parameters" element="tns:newProcessResponse"></part>
+	</message>
+	
+	<message name="UnknownName">
+		<part name="fault" element="restr:UnknownName"></part>
+	</message>
+	<portType name="WorkflowPortType">
+		<operation name="newProcess">
+			<input message="tns:newProcess"></input>
+			<output message="tns:newProcessResponse"></output>
+			<fault name="UnknownName" message="tns:UnknownName"></fault>
+            <fault name="GenericFault" message="restr:GenericFault"></fault>
+        </operation>
+	</portType>
+	<binding name="WorkflowPortBinding" type="tns:WorkflowPortType">
+
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<operation name="newProcess">
+
+			<soap:operation
+				soapAction="http://pad.polito.it/Workflow/newProcess" />
+			<input>
+
+				<soap:body use="literal" />
+			</input>
+			<output>
+
+				<soap:body use="literal" />
+			</output>
+
+			<fault name="UnknownName">
+
+				<soap:fault use="literal" name="UnknownName" />
+			</fault>
+			<fault name="GenericFault">
+				<soap:fault use="literal" name="GenericFault" />
+			</fault>
+		</operation>
+	</binding>
+	<service name="WorkflowService">
+		<port name="WorkflowPort" binding="tns:WorkflowPortBinding">
+			<soap:address location="WF_REPLACE_WITH_ACTUAL_URL" />
+		</port>
+	</service>
+	<service name="WorkflowInfoService">
+		<port name="WorkflowInfoPort" binding="restr:WorkflowInfoPortBinding">
+			<soap:address location="WFINFO_REPLACE_WITH_ACTUAL_URL" />
+		</port>
+	</service>
+	<service name="ProcessService">
+		
+		<port name="ProcessPort" binding="restr:ProcessPortBinding">
+			<soap:address location="PROC_REPLACE_WITH_ACTUAL_URL" />
+		</port>
+	</service>
+</definitions>

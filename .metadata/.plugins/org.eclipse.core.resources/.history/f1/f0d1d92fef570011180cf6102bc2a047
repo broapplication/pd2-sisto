@@ -1,0 +1,19 @@
+package it.polito.pd2.WF.sol6.service;
+
+import it.polito.pd2.WF.sol6.service.gen.ProcessSummary;
+
+public abstract class WorkflowUtilities {
+
+	public static ProcessSummary duplicateProcessSummary(ProcessSummary process) {
+		ProcessSummary res=new ProcessSummary();
+		res.setPCode(process.getPCode());
+		res.setStartTime(process.getStartTime());
+		res.setWorkflowName(process.getWorkflowName());
+		res.getActionStatus().addAll(process.getActionStatus());
+		res.getActiveActionStatus().addAll(process.getActiveActionStatus());
+		res.getAvailableActionStatus().addAll(process.getAvailableActionStatus());
+		res.getTerminatedActionStatus().addAll(process.getTerminatedActionStatus());
+		return res;
+	}
+
+}

@@ -1,0 +1,12 @@
+package it.polito.pd2.WF.sol6.service;
+
+public class WorkflowServerException extends Exception {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6585057097750077701L;
+
+	public WorkflowServerException(String message) {
+		super(message);
+	}
+}

@@ -1,0 +1,76 @@
+1320895704822	Copy file
+1320895710666	Delete element
+1320896436858	Copy file
+1320896941245	Rename resource 'OLDwfInfo.xsd'
+1320896962512	Rename resource 'OLDwfInfo.xsd.bak'
+1320898310723	Rename resource 'wfInfo.xsd.bak'
+1320898328143	Delete element
+1320902334731	Rename resource 'schema1.xsd'
+1320903257409	Delete element
+1320903273547	Delete element
+1320903290436	Copy file
+1320955656186	Delete elements
+1320955659562	Delete elements
+1320957743675	Delete elements
+1320957748698	Delete elements
+1320972105332	Delete elements
+1320975007556	Delete element
+1320975136170	Move compilation unit
+1320975153250	Delete element
+1320981454153	Delete element
+1320981456684	Delete element
+1321027844220	Delete elements
+1321034539989	Move type 'MiaClasse2' to new file
+1321035803759	Delete element
+1321063425785	Rename type 'prova'
+1321063913728	Delete element
+1321064133435	Delete element
+1321071085135	Encapsulate field 'x'
+1321076627386	Move compilation units
+1321102233643	Delete element
+1321107334310	Delete element
+1321107344144	Copy file
+1321107347722	Delete element
+1321107364200	Copy file
+1321107654274	Delete element
+1321107666162	Copy file
+1321112819677	Delete element
+1321113585919	Delete elements
+1321124987059	Delete element
+1321135597358	Rename type 'MyUnmarshallable'
+1321142629217	Infer generic type arguments
+1321142652862	Infer generic type arguments
+1321144038110	Copy compilation unit
+1321144135676	Delete element
+1321147387810	Rename type variable 'E'
+1321148836487	Encapsulate field 'monitor'
+1321154932094	Rename method 'addActorRed'
+1321188485530	Delete element
+1321188503830	Copy file
+1321188539091	Delete element
+1321188554868	Copy file
+1321188781255	Delete element
+1321188793300	Copy file
+1321188952054	Delete element
+1321188969718	Copy file
+1321189260358	Delete element
+1321189270493	Copy file
+1321197038383	Rename local variable 'list'
+1321202264642	Rename local variable 'wtList'
+1321202278807	Rename local variable 'atList'
+1321203937479	Rename local variable 'workflowImpl'
+1321209022136	Encapsulate field 'process'
+1321214203873	Copy file
+1321214492393	Rename local variable 'l'
+1321214501498	Rename local variable 'a'
+1321214509124	Rename local variable 'ar'
+1321215398281	Rename resource 'wfInfo.xsd'
+1321215447188	Rename resource 'wfInfoS.xsd'
+1321224006691	Copy file
+1321224720632	Rename resource 'wfInfo.xsd'
+1321224736834	Copy file
+1321224934145	Delete element
+1321224937343	Delete element
+1321224941272	Delete element
+1321224943341	Delete element
+1321224980487	Copy files

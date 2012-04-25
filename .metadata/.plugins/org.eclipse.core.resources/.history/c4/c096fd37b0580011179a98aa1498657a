@@ -1,0 +1,23 @@
+
+public class Prova {
+	private Object o;
+	public Prova() {
+		o=new Object();
+		synchronized (o) {
+			synchronized (o) {
+				System.out.println("Ciao");
+				
+			}
+			
+		}
+	}
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}
