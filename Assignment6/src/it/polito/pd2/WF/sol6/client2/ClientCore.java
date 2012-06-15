@@ -84,14 +84,14 @@ public class ClientCore {
 
 	/**
 	 * Setta l'endpoint da utilizzare per il servizio.
-	 * La modifica non avrà effetto sino alla prossima chiamata di run o
+	 * La modifica non avra' effetto sino alla prossima chiamata di run o
 	 * di conferma impostazioni.
 	 * Per annullare la modifica, impostare <code>null</code>.
 	 * 
 	 * @param wfEndpoint
 	 * l'URL da utilizzare come endpoint (tipo {@link String})
 	 * @throws MalformedURLException
-	 * non è un URL valido
+	 * non e' un URL valido
 	 */
 	public void setWfEndpoint(String wfEndpoint) throws MalformedURLException {
 		if(wfEndpoint!=null)
@@ -115,14 +115,14 @@ public class ClientCore {
 
 	/**
 	 * Setta l'endpoint da utilizzare per il servizio.
-	 * La modifica non avrà effetto sino alla prossima chiamata di run o
+	 * La modifica non avra' effetto sino alla prossima chiamata di run o
 	 * di conferma impostazioni.
 	 * Per annullare la modifica, impostare <code>null</code>.
 	 * 
 	 * @param wfInfoEndpoint
 	 * l'URL da utilizzare come endpoint (tipo {@link String})
 	 * @throws MalformedURLException
-	 * non è un URL valido
+	 * non e' un URL valido
 	 */
 	public void setWfInfoEndpoint(String wfInfoEndpoint) throws MalformedURLException {
 		if(wfInfoEndpoint!=null)
@@ -146,14 +146,14 @@ public class ClientCore {
 
 	/**
 	 * Setta l'endpoint da utilizzare per il servizio.
-	 * La modifica non avrà effetto sino alla prossima chiamata di run o
+	 * La modifica non avra' effetto sino alla prossima chiamata di run o
 	 * di conferma impostazioni.
 	 * Per annullare la modifica, impostare <code>null</code>.
 	 * 
 	 * @param procEndpoint
 	 * l'URL da utilizzare come endpoint (tipo {@link String})
 	 * @throws MalformedURLException
-	 * non è un URL valido
+	 * non e' un URL valido
 	 */
 	public void setProcEndpoint(String procEndpoint) throws MalformedURLException {
 		if(procEndpoint!=null)
@@ -191,7 +191,7 @@ public class ClientCore {
 	 * Imposta l'utilizzo degli endpoint precedentemente settati.
 	 * 
 	 * @throws ClientException
-	 * il servizio non è attivo, oppure errore interno
+	 * il servizio non e' attivo, oppure errore interno
 	 */
 	public void updateEndpoints() throws ClientException {
 		runningLock.readLock().lock();
