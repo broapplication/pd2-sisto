@@ -724,7 +724,7 @@ Se il servizio non puo' rispondere, viene restituito un errore.</documentation>
 	<portType name="WorkflowPortType">
 		<documentation>Interfaccia del servizio per il controllo del workflow.
 Permette di creare nuovi processi.
-Per effettuare le operazioni, ottenere prima un client I da usare nei messaggi.</documentation>
+Per effettuare le operazioni, ottenere prima un client ID da usare nei messaggi.</documentation>
 		<operation name="newProcess">
 			<documentation>Crea un nuovo processo del workflow passato come parametro.
 Se la richiesta va a buon fine, restituisce le informazioni sul nuovo processo creato, che include una lista dello
@@ -965,7 +965,7 @@ Se i parametri di ingresso non sono corretti, oppure se il servizio non puo' ris
 	<service name="WorkflowService">
 		<documentation>Servizio per il controllo del workflow.
 Permette di creare nuovi processi.
-Per effettuare le operazioni, ottenere prima un client I da usare nei messaggi.</documentation>
+Per effettuare le operazioni, ottenere prima un client ID da usare nei messaggi.</documentation>
 		<port name="WorkflowPort" binding="tns:WorkflowPortBinding">
 			<soap:address location="WF_REPLACE_WITH_ACTUAL_URL" />
 		</port>

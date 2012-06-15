@@ -11,9 +11,12 @@
 	
 	<!-- define directories -->
 	<property name="src.dir" location="${basedir}/src"/>
-	<property name="service.src.dir" location="${src.dir}/it/polito/pd2/WF/sol6/service"/>
-	<property name="client1.src.dir" location="${src.dir}/it/polito/pd2/WF/sol6/client1"/>
-	<property name="client2.src.dir" location="${src.dir}/it/polito/pd2/WF/sol6/client2"/>
+	<property name="service.package.dir" value="it/polito/pd2/WF/sol6/service"/>
+	<property name="client1.package.dir" value="it/polito/pd2/WF/sol6/client1"/>
+	<property name="client2.package.dir" value="it/polito/pd2/WF/sol6/client2"/>
+	<property name="service.src.dir" location="${src.dir}/${service.package.dir}"/>
+	<property name="client1.src.dir" location="${src.dir}/${client1.package.dir}"/>
+	<property name="client2.src.dir" location="${src.dir}/${client2.package.dir}"/>
 	<property name="console.src.dir" location="${src.dir}/it/polito/pd2/lab6"/>
 	
 	<property name="gen.dir" location="${basedir}/generated"/>
@@ -35,14 +38,15 @@
 	
 	<property name="main.wsdl.filename" value="wsService.wsdl"/>
 	<!--
-	<property name="main.wsdl.filename" value="WorkflowService.wsdl"/>
 	<property name="restricted.wsdl.filename" value="WorkflowRestrictedService.wsdl"/>
 	<property name="restricted.xsd.filename" value="WorkflowRestrictedService.wsdl"/>
 	-->
+	<property name="service.xjb" value="service.xjb"/>
 	
 	<fileset dir="${wsdl.dir}" id="wsdl.fileset">
     	<include name="${main.wsdl.filename}"/>
-		<!-- 
+		<include name="${service.xjb}"/>
+		<!--
 		<include name="${restricted.wsdl.filename}"/>
 		<include name="${restricted.xsd.filename}"/>
 		-->
@@ -161,11 +165,11 @@
 		
 	<!-- define the "compile.wsdl.service" target -->
 	<target name="compile.wsdl.service" depends="init.service,configure.wsdl">
-		<property name="WSDL"
-			   	  location="${jaxws.wsdl.dir}/${main.wsdl.filename}"/>
-		
+		<property name="WSDL" location="${jaxws.wsdl.dir}/${main.wsdl.filename}"/>
+		<property name="custom-bindings" location="${jaxws.wsdl.dir}/${service.xjb}" />
 		<exec executable="wsimport">
-	    	<arg line="-d ${service.gen.dir} -p ${service.gen.package} -s ${service.gen-src.dir} -keep ${WSDL}"/>
+	    	<!--<arg line="-d '${service.gen.dir}' -p ${service.gen.package} -s '${service.gen-src.dir}' -keep '${WSDL}' -b '${custom-bindings}'"/>-->
+			<arg line="-d '${service.gen.dir}' -p ${service.gen.package} -s '${service.gen-src.dir}' -keep '${WSDL}'"/>
 		</exec>
 	</target>   
 		
@@ -260,7 +264,7 @@
 		</condition>
 		<echo>WSDL: ${WSDL1}</echo>
 		<exec executable="wsimport">
-	    	<arg line="-d ${client1.gen.dir} -p ${client1.gen.package} -s ${client1.gen-src.dir} -keep ${WSDL1}"/>
+	    	<arg line="-d '${client1.gen.dir}' -p ${client1.gen.package} -s '${client1.gen-src.dir}' -keep '${WSDL1}'"/>
 		</exec>
 	</target>
 	
@@ -307,7 +311,7 @@
 		</condition>
 		<echo>WSDL: ${WSDL2}</echo>
 		<exec executable="wsimport">
-	    	<arg line="-d ${client2.gen.dir} -p ${client2.gen.package} -s ${client2.gen-src.dir} -keep ${WSDL2}"/>
+	    	<arg line="-d '${client2.gen.dir}' -p ${client2.gen.package} -s '${client2.gen-src.dir}' -keep '${WSDL2}'"/>
 		</exec>
 	</target>
 	

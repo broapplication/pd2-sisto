@@ -8,6 +8,7 @@ import java.util.List;
 import it.polito.pd2.WF.sol6.service.gen.ActionFieldType;
 import it.polito.pd2.WF.sol6.service.gen.ActionStatusType;
 import it.polito.pd2.WF.sol6.service.gen.ActionsField;
+import it.polito.pd2.WF.sol6.service.gen.ActorType;
 import it.polito.pd2.WF.sol6.service.gen.GenericFault;
 import it.polito.pd2.WF.sol6.service.gen.GetProcessSummaries.Fields;
 import it.polito.pd2.WF.sol6.service.gen.ProcessSummary;
@@ -225,6 +226,13 @@ public abstract class WorkflowUtilities {
 		//toSplit = toSplit MINUS commonPart
 		toSplit.removeAll(commonPart);
 		return commonPart;
+	}
+	
+	public static boolean containsActor(HashSet<ActorTypeHashable> actors,	ActorType actor) {
+		ActorTypeHashable act = new ActorTypeHashable();
+		act.setName(actor.getName());
+		act.setRole(actor.getRole());
+		return actors.contains(act);
 	}
 
 }

@@ -7,10 +7,7 @@ import it.polito.pd2.WF.sol6.service.WorkflowServer;
 
 public class Prova {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
+	private static void service(String[] args) {
 		System.setProperty("it.polito.pd2.WF.WorkflowMonitorFactory", "it.polito.pd2.WF.Random.WorkflowMonitorFactoryImpl");
 		System.setProperty("it.polito.pd2.WF.Random.seed","112233");
 		System.setProperty("it.polito.pd2.WF.Random.testcase", "2");
@@ -18,17 +15,28 @@ public class Prova {
 		System.setProperty("WORKFLOW_INFO_SERVICE", "http://localhost:8182/WorkflowService");
 		System.setProperty("PROCESS_SERVICE", "http://localhost:8183/WorkflowService");
 		WorkflowServer.main(args);
-		
+	}
+	
+	public static void client1(String[] args) {
 		WorkflowMonitorFactory factory=new WorkflowMonitorFactoryImpl();
 		System.setProperty("it.polito.pd2.WF.sol6.URL", "http://localhost:8181/WorkflowService");
-		//factory.newWorkflowMonitor();
-		
-		String[] a=new String[2];
-		
-		
+		factory.newWorkflowMonitor();		
+	}
+	
+	public static void client2(String[] args) {
+		String[] a=new String[2];		
 		a[0]="Mario Rossi";
 		a[1]="Giornalista";
-		Client2.main(a);
+		Client2.main(a); 
+	}
+	
+	
+	public static void main(String[] args) {
+		
+		service(args);
+		//client1(args);
+		client2(args);
+		
 	}
 
 }

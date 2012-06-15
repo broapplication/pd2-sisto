@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -40,6 +41,16 @@ public class ClientCore {
 	
 	private static final String NOT_RUNNING = "Client is not running";
 	private static final String UNEXPECTED_ERROR = "Unexpected error.";
+	
+	private static final Comparator<ProcessSummary> START_TIME_ORDER = 
+			new Comparator<ProcessSummary>() {
+				@Override
+				public int compare(ProcessSummary p1,
+						ProcessSummary p2) {
+					return p1.getStartTime().compare(p2.getStartTime());
+				}
+			};
+	
 	private ReentrantReadWriteLock runningLock;
 	
 	private ActorType actor=null;
@@ -73,14 +84,14 @@ public class ClientCore {
 
 	/**
 	 * Setta l'endpoint da utilizzare per il servizio.
-	 * La modifica non avra' effetto sino alla prossima chiamata di run o
+	 * La modifica non avrà effetto sino alla prossima chiamata di run o
 	 * di conferma impostazioni.
 	 * Per annullare la modifica, impostare <code>null</code>.
 	 * 
 	 * @param wfEndpoint
 	 * l'URL da utilizzare come endpoint (tipo {@link String})
 	 * @throws MalformedURLException
-	 * non e' un URL valido
+	 * non è un URL valido
 	 */
 	public void setWfEndpoint(String wfEndpoint) throws MalformedURLException {
 		if(wfEndpoint!=null)
@@ -104,14 +115,14 @@ public class ClientCore {
 
 	/**
 	 * Setta l'endpoint da utilizzare per il servizio.
-	 * La modifica non avra' effetto sino alla prossima chiamata di run o
+	 * La modifica non avrà effetto sino alla prossima chiamata di run o
 	 * di conferma impostazioni.
 	 * Per annullare la modifica, impostare <code>null</code>.
 	 * 
 	 * @param wfInfoEndpoint
 	 * l'URL da utilizzare come endpoint (tipo {@link String})
 	 * @throws MalformedURLException
-	 * non e' un URL valido
+	 * non è un URL valido
 	 */
 	public void setWfInfoEndpoint(String wfInfoEndpoint) throws MalformedURLException {
 		if(wfInfoEndpoint!=null)
@@ -135,14 +146,14 @@ public class ClientCore {
 
 	/**
 	 * Setta l'endpoint da utilizzare per il servizio.
-	 * La modifica non avra' effetto sino alla prossima chiamata di run o
+	 * La modifica non avrà effetto sino alla prossima chiamata di run o
 	 * di conferma impostazioni.
 	 * Per annullare la modifica, impostare <code>null</code>.
 	 * 
 	 * @param procEndpoint
 	 * l'URL da utilizzare come endpoint (tipo {@link String})
 	 * @throws MalformedURLException
-	 * non e' un URL valido
+	 * non è un URL valido
 	 */
 	public void setProcEndpoint(String procEndpoint) throws MalformedURLException {
 		if(procEndpoint!=null)
@@ -180,7 +191,7 @@ public class ClientCore {
 	 * Imposta l'utilizzo degli endpoint precedentemente settati.
 	 * 
 	 * @throws ClientException
-	 * il servizio non e' attivo, oppure errore interno
+	 * il servizio non è attivo, oppure errore interno
 	 */
 	public void updateEndpoints() throws ClientException {
 		runningLock.readLock().lock();
@@ -285,7 +296,7 @@ public class ClientCore {
 				displayMenu();
 				try{
 					System.out.print("Select: ");
-					command=console.getNextCommand();
+					command=getNextCommand();
 					switch(command){
 						case 0: 
 							break;
@@ -314,6 +325,7 @@ public class ClientCore {
 			System.out.println("Exiting interactive mode..");
 			throw e;
 		} catch (Exception e) {
+			e.printStackTrace();
 			runningLock.readLock().unlock();
 			System.out.println("Exiting interactive mode..");
 			throw new ClientException(UNEXPECTED_ERROR);
@@ -345,7 +357,14 @@ public class ClientCore {
 					workflows.get(selected));
 			
 			System.out.println("Process successfully created.");
-			displayProcessSummary(process);				
+			displayProcessSummary(process);
+			System.out.println("Automatically instantiated actions:");
+			if(process.getActions()==0) {
+				System.out.println("no actions...");
+			}
+			for(ActionStatusType action : process.getActionStatus()) {
+				displayActionStatus(action);				
+			}
 			
 		} catch (CommandReadException e) {
 			//re-raise exception
@@ -417,8 +436,8 @@ public class ClientCore {
 		
 		
 		System.out.print(prompt);
-		int command = console.getNextCommand();
-		if(command>=list.size()) {
+		int command = getNextCommand();
+		if(command>=list.size() || command==OUT_OF_RANGE) {
 			System.err.println("Bad choice.");
 			return OUT_OF_RANGE;
 		}
@@ -440,10 +459,8 @@ public class ClientCore {
 			
 			//get all processes
 			List<ProcessSummary> processes = wfInfo.getProcessSummaries(restrictions, fields);
+			Collections.sort(processes, START_TIME_ORDER);
 			List<String> printableProcesses = getPrintableProcesses(processes);
-			List<String> originalOrder = new ArrayList<String>(printableProcesses);
-			
-			Collections.sort(printableProcesses);
 			printableProcesses.add("(back)");
 			int selected = getSelection(printableProcesses, "Select process: ");
 			if(selected==printableProcesses.size()-1 || selected==OUT_OF_RANGE) {
@@ -452,9 +469,8 @@ public class ClientCore {
 			}
 			
 			//get active actions (with embedded actions)
-			String PCode = processes.get(
-					originalOrder.indexOf(printableProcesses.get(selected))
-						).getPCode();
+			String PCode = processes.get(selected).getPCode();
+			restrictions.getActor().add(actor);
 			restrictions.getRole().add(actor.getRole());
 			restrictions.getPCode().add(PCode);
 			fields.setActiveActions(ActionsField.LIST);
@@ -478,27 +494,29 @@ public class ClientCore {
 				return;
 			}
 
-			//select next actions
 			ActionStatusType action = actions.get(selected);
-			List<String> nextAction = action.getAction().getNextAction();
-			Collections.sort(nextAction);
-			nextAction.add(0,"(done)");
-			
-			ArrayList<String> selectedNextActions = new ArrayList<String>();
-			do {
-				if(!selectedNextActions.isEmpty())
-					System.out.println("Current selection: " + selectedNextActions.toString());
+			ArrayList<String> selectedNextActions=null;
+			if( action.getAction().getWorkflow()==null) {
+				//simple action
+				//select next actions
+				List<String> nextAction = action.getAction().getNextAction();
+				Collections.sort(nextAction);
+				nextAction.add(0,"(done)");
 				
-				selected = getSelection(nextAction, "Select next action: ");
-				if(selected==OUT_OF_RANGE) {
-					System.out.println("Operation aborted.");
-					return;
-				}
-				if(selected>0)
-					selectedNextActions.add(nextAction.remove(selected));
-			} while(selected>0);
-			
-			
+				selectedNextActions = new ArrayList<String>();
+				do {
+					if(!selectedNextActions.isEmpty())
+						System.out.println("Current selection: " + selectedNextActions.toString());
+					
+					selected = getSelection(nextAction, "Select next action: ");
+					if(selected==OUT_OF_RANGE) {
+						System.out.println("Operation aborted.");
+						return;
+					}
+					if(selected>0)
+						selectedNextActions.add(nextAction.remove(selected));
+				} while(selected>0);
+			}
 			
 			//terminate action
 			
@@ -516,8 +534,12 @@ public class ClientCore {
 			System.out.println("Termination time: " + 
 					terminationTime.value.toGregorianCalendar().getTime().toString());
 			
-			if(nextProcess.value != null)
+			if(nextProcess.value != null) {
 				displayProcessSummary(nextProcess.value);
+				for(ActionStatusType act : nextProcess.value.getActionStatus()) {
+					displayActionStatus(act);				
+				}
+			}
 			if(nextActionStatus.value != null)
 				for(ActionStatusType status : nextActionStatus.value)
 					displayActionStatus(status);				
@@ -553,10 +575,8 @@ public class ClientCore {
 			
 			//get all processes
 			List<ProcessSummary> processes = wfInfo.getProcessSummaries(restrictions, fields);
+			Collections.sort(processes, START_TIME_ORDER);
 			List<String> printableProcesses = getPrintableProcesses(processes);
-			List<String> originalOrder = new ArrayList<String>(printableProcesses);
-			
-			Collections.sort(printableProcesses);
 			printableProcesses.add("(back)");
 			
 			int selected = getSelection(printableProcesses, "Select process: ");
@@ -566,9 +586,7 @@ public class ClientCore {
 			}
 			
 			//get available actions
-			String PCode = processes.get(
-						originalOrder.indexOf(printableProcesses.get(selected))
-					).getPCode();
+			String PCode = processes.get(selected).getPCode();
 			
 			restrictions.getRole().add(actor.getRole());
 			restrictions.getPCode().add(PCode);
@@ -618,15 +636,30 @@ public class ClientCore {
 			throw new ClientException(UNEXPECTED_ERROR);
 		}
 	}
+	
+	
+	private int getNextCommand() {
+			try {
+				return console.getNextCommand();
+			} catch (Exception e) {
+				return OUT_OF_RANGE;
+			}
+	}
 
 	private void displayActionStatus(ActionStatusType action) {
 		System.out.println("code:\t\t"		+ action.getACode());
-		System.out.println("name:\t\t"		+ action.getName());
+		if(action.getAction()!=null) {
+			System.out.println("name:\t\t"		+ action.getAction().getName());
+			System.out.println("role:\t\t"		+ action.getAction().getRole());
+		} else {
+			System.out.println("name:\t\t"		+ action.getName());
+		}
 		ActorType actor=action.getActor();
 		XMLGregorianCalendar time = action.getTerminationTime();
 
-		if(actor==null)
+		if(actor==null) {
 			System.out.println("state:\t\tavailable");
+		}
 		else if(time==null) {
 			System.out.println("state:\t\tactive");
 			System.out.println("actor:\t\t"		+ action.getActor().getName());
@@ -654,6 +687,7 @@ public class ClientCore {
 	}
 
 	private void  displayMenu(){
+		System.out.println("# "+actor.getName()+" - "+actor.getRole()+" #");
 		System.out.println("0 quit");
 		System.out.println("1 new process");
 		System.out.println("2 take in charge action");

@@ -166,7 +166,7 @@ public class WorkflowInfoServiceImpl implements WorkflowInfoPortType {
 		HashSet<String> roles=null;
 		HashSet<String> names=null;
 		HashSet<String> codes=null;
-		HashSet<ActorType> actors=null;
+		HashSet<ActorTypeHashable> actors=null;
 		List<ProcessSummary> res=new ArrayList<ProcessSummary>();
 		UnknownNames errNames=Errors.unknownNames();
 		UnknownCodes errCodes=Errors.unknownCodes();
@@ -183,9 +183,13 @@ public class WorkflowInfoServiceImpl implements WorkflowInfoPortType {
 				List<ActorType> checkActors = restrictions.getActor();
 				HashSet<String> actorsRoles=null;
 				if(!checkActors.isEmpty()) {
-					actors=new HashSet<ActorType>(checkActors);
+					actors=new HashSet<ActorTypeHashable>();
 					actorsRoles=new HashSet<String>(); 
-					for(ActorType actor : actors) {
+					for(ActorType actor : checkActors) {
+						ActorTypeHashable a=new ActorTypeHashable();
+						a.setName(actor.getName());
+						a.setRole(actor.getRole());
+						actors.add(a);
 						checkRoles.add(actor.getRole());
 						actorsRoles.add(actor.getRole());
 					}
@@ -272,10 +276,12 @@ public class WorkflowInfoServiceImpl implements WorkflowInfoPortType {
 				for(ProcessSummary originalProc : res) {
 					process=new ProcessSummary();
 					//filter actions
-					for(ActionStatusType status : originalProc.getActionStatus())
+					for(ActionStatusType status : originalProc.getActionStatus()) {						
 						if(roles.contains(status.getAction().getRole()) &&
-								(actors == null || actors.contains(status.getActor())))
+								(actors == null || 
+								WorkflowUtilities.containsActor(actors, status.getActor())))
 							process.getActionStatus().add(status);
+					}
 					//check for remaining actions
 					if(!process.getActionStatus().isEmpty()) {
 						//don't skip process
@@ -284,8 +290,10 @@ public class WorkflowInfoServiceImpl implements WorkflowInfoPortType {
 						process.setWorkflowName(originalProc.getWorkflowName());
 						for(ActionStatusType status : originalProc.getActiveActionStatus())
 							if(roles.contains(status.getAction().getRole()) &&
-									(actors == null || actors.contains(status.getActor())))
+									(actors == null ||
+									WorkflowUtilities.containsActor(actors, status.getActor())))
 								process.getActiveActionStatus().add(status);
+						
 						for(ActionStatusType status : originalProc.getAvailableActionStatus())
 							if(roles.contains(status.getAction().getRole()) &&
 									(actors == null || actors.contains(status.getActor())))
