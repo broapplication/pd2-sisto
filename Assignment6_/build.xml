@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+
+<!-- 
+-->
+<project name="Assignment6" default="run-test" basedir=".">
+
+	<!-- The random "WFMonitorFactory" -->
+	<property name="Random.WFMonitorFactory" value="it.polito.pd2.WF.Random.WorkflowMonitorFactoryImpl" />
+	<property name="it.polito.pd2.WF.sol6.URL" value="http://localhost:8181/WorkflowService"/>
+
+	<property name="WF.location" location="." />
+	<property name="lab6.location" location="." />
+	<property name="build.dir" location="${lab6.location}/build" />
+	<property name="pkg2"  value="it.polito.pd2.WF.sol6.client2"/>
+
+   <!-- define classpath -->
+   <path id="test-classpath">
+     <pathelement path="${build.dir}"/>
+   	 <pathelement location="${WF.location}/lib/WF.jar"/>
+   	 <pathelement location="${WF.location}/lib/WFRandom.jar"/>
+	 <pathelement location="${WF.location}/lib/lab6.jar"/>
+	 <pathelement location="${WF.location}/lib/junit-4.5.jar"/>
+   </path>
+
+   <path id="run-classpath-2">
+	  <pathelement path="${build.dir}"/>
+   </path>
+	
+	<property name="testcase" value="2" />
+	
+	<property name="testfile" location="${basedir}/testcases/testinput1.txt"/>
+
+	<!-- Target setseed	-->
+	<target name="setseed" unless="seed">
+		<tstamp>
+			<format property="seed" pattern="HHmmss" />
+		</tstamp>
+	</target>
+	
+	<!-- init target -->
+	<target name="init">
+		<mkdir dir="${build.dir}"/>
+	</target>   
+   
+   <target name="build-client-1" depends="init">
+   	  <ant antfile="${basedir}/sol_build.xml" target="compile-client-1"/>
+   </target>
+
+   <target name="build-client-2" depends="init">
+	  <ant antfile="${basedir}/sol_build.xml" target="compile-client-2"/>
+   </target>
+	
+   <target name="run-server" depends="init">
+	  <ant antfile="${basedir}/sol_build.xml" target="run.server"/>
+   </target>
+
+	<!-- Target run-client-2 -->
+   <target name="run-client-2" depends="build-client-2">
+      <java classname="${pkg2}.Client2" fork="true" input="${testfile}">
+      	<sysproperty key="it.polito.pd2.WF.sol6.URL" value="${it.polito.pd2.WF.sol6.URL}"/>
+      	<arg value="actorName"/>
+      	<arg value="actorRole"/>      	
+        <classpath refid="run-classpath-2"/>
+      </java>
+   </target>
+	
+	<!-- Target runFuncTest	-->
+	<target name="run-test" depends="setseed,run-client-2">
+		<antcall target="runTest.real">
+			<param name="test.seed" value="${seed}" />
+			<param name="test.case" value="${testcase}" />
+			<param name="test.file" value="${testfile}" />
+			<param name="test.class" value="it.polito.pd2.WF.lab6.tests.WFMonitorTests" />
+		</antcall>
+	</target>
+
+	<!-- Target runTest.real	-->
+	<target name="runTest.real" depends="build-client-2, build-client-1">
+		<junit printsummary="yes" dir="." fork="yes" haltonfailure="no" showoutput="no" filtertrace="true">
+			<sysproperty key="it.polito.pd2.WF.Random.testcase" value="${test.case}"/>
+			<sysproperty key="it.polito.pd2.WF.Random.seed" value="${test.seed}"/>
+			<sysproperty key="it.polito.pd2.WF.Random.guided" value="true"/>
+			<sysproperty key="it.polito.pd2.WF.Random.testfile" value="${test.file}"/>
+			<sysproperty key="it.polito.pd2.WF.sol6.URL" value="${it.polito.pd2.WF.sol6.URL}"/>
+			
+			<formatter type="brief" usefile="false"/>
+			<test haltonfailure="no" failureproperty="test_failed" name="${test.class}"/>
+			<classpath>
+				<path refid="test-classpath" />
+			</classpath>
+		</junit>
+		<fail if="test_failed" status="126" message="*** Tests FAILED ***"/>
+		<echo>*** Tests passed  ***</echo>
+	</target>
+
+	
+	<!-- clean target -->
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+	</target>   
+
+</project>

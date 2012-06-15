@@ -1,0 +1,8 @@
+/separate
+/testGetProcessSummaries.xml
+/testGetProcessSummariesResponse.xml
+/testGetWorkflowNamesResponse.xml
+/testGetWorkflows.xml
+/testGetWorkflowsResponse.xml
+/testTerminateAction.xml
+/testUnknownCodes.xml

@@ -1,0 +1,12 @@
+<jaxws:bindings
+  		xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  		xmlns:jaxws="http://java.sun.com/xml/ns/jaxws"
+  		xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.1"
+  		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+		wsdlLocation="WorkflowService.wsdl"
+		jaxws:extensionBindingPrefixes="xjc">
+	<jaxws:bindings node="wsdl:definitions/wsdl:types/xsd:schema[@targetNamespace='http://pad.polito.it/Workflow']/xsd:complexType[@name='actorType']">
+        <jaxb:class implClass="it.polito.pd2.WF.sol6.service.ActorTypeHashable"/>
+    </jaxws:bindings>
+</jaxws:bindings>
