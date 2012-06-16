@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename resource &apos;Assignment6/wsdl/WorkflowService.wsdl&apos; to &apos;wsService.wsdl&apos;" description="Rename resource &apos;WorkflowService.wsdl&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="wsdl/WorkflowService.wsdl" name="wsService.wsdl" stamp="1329757413432" updateReferences="true"/>
-</session>

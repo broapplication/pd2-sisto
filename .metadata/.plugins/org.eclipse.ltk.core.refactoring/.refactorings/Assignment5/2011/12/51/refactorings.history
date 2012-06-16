@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Copy element &apos;WorkflowInfoService.wsdl&apos; to &apos;Assignment6&apos;&#x0D;&#x0A;- Original project: &apos;Assignment5&apos;&#x0D;&#x0A;- Destination element: &apos;Assignment6&apos;&#x0D;&#x0A;- Original element: &apos;WorkflowInfoService.wsdl&apos;" description="Copy file" destination="=Assignment6" element1="WorkflowInfoService.wsdl" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1324488467706" units="0" version="1.0"/>
-</session>

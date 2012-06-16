@@ -63,9 +63,9 @@ public class WorkflowMonitorParser extends DefaultHandler {
 /*---------PARSER SPECIFIC FIELDS---------------*/
 
 	private WorkflowMonitorImpl monitor;
-	WorkflowImpl wf;		//last read
-	ProcessImpl proc;		//last read
-	ActionStatusImpl as;	//last read
+	WorkflowReaderImpl wf;		//last read
+	ProcessReaderImpl proc;		//last read
+	ActionStatusReaderImpl as;	//last read
 
 /*-------------CONSTRUCTOR----------------------*/
 
@@ -346,18 +346,18 @@ public class WorkflowMonitorParser extends DefaultHandler {
 		Map<String,String> arAttributes=attrMap.get("actor");
 
 
-		ActionImpl act;
-		SimpleActionImpl sact;
-		ProcessActionImpl pact;
+		ActionReaderImpl act;
+		SimpleActionReaderImpl sact;
+		ProcessActionReaderImpl pact;
 		
 		Actor ar;
 		boolean auto;
 		String name;
 		if(element=="workflow") {
 			name=wfAttributes.get("name");
-			wf=(WorkflowImpl) monitor.getWorkflow(name);
+			wf=(WorkflowReaderImpl) monitor.getWorkflow(name);
 			if(wf==null) {
-				wf=new WorkflowImpl(name,null);
+				wf=new WorkflowReaderImpl(name,null);
 				monitor.addWorkflow(name, wf);
 			}
 
@@ -370,7 +370,7 @@ public class WorkflowMonitorParser extends DefaultHandler {
 				auto=actAttributes.get("automaticallyInstantiated").equals("true");
 			else
 				auto=false;
-			sact=new SimpleActionImpl(name,	actAttributes.get("role"),wf,auto);			
+			sact=new SimpleActionReaderImpl(name,	actAttributes.get("role"),wf,auto);			
 			wf.addAction(name, sact);	//resolve links
 
 			//possible next actions
@@ -393,17 +393,17 @@ public class WorkflowMonitorParser extends DefaultHandler {
 			else
 				auto=false;
 			String actionWfName = pactAttributes.get("actionWorkflow");
-			WorkflowImpl actionWf = (WorkflowImpl) monitor.getWorkflow(actionWfName);
+			WorkflowReaderImpl actionWf = (WorkflowReaderImpl) monitor.getWorkflow(actionWfName);
 			if(actionWf==null) {
-				actionWf=new WorkflowImpl(actionWfName,null);
+				actionWf=new WorkflowReaderImpl(actionWfName,null);
 				monitor.addWorkflow(actionWfName, actionWf);
 			}
-			pact=new ProcessActionImpl(name,actAttributes.get("role"),wf,auto,actionWf);			
+			pact=new ProcessActionReaderImpl(name,actAttributes.get("role"),wf,auto,actionWf);			
 			wf.addAction(name, pact);	//resolve links
 
 		} else if(element=="process") {
 			try {
-				proc=new ProcessImpl(parseTime(procAttributes.get("startTime")), wf, null);
+				proc=new ProcessReaderImpl(parseTime(procAttributes.get("startTime")), wf, null);
 			} catch (ParseException e) {
 				throw errorAttribute(ERROR_DATE, "process", "startTime");			
 			}
@@ -412,13 +412,13 @@ public class WorkflowMonitorParser extends DefaultHandler {
 
 		} else if(element=="actionStatus") {
 			name=asAttributes.get("action");
-			act=(ActionImpl) wf.getAction(name);
+			act=(ActionReaderImpl) wf.getAction(name);
 			String terminationTime=asAttributes.get("terminationTime");
 			if(terminationTime==null)
-				as=new ActionStatusImpl(act);
+				as=new ActionStatusReaderImpl(act);
 			else {
 				try {
-					as=new ActionStatusImpl(act, null, parseTime(asAttributes.get("terminationTime")));
+					as=new ActionStatusReaderImpl(act, null, parseTime(asAttributes.get("terminationTime")));
 				} catch (ParseException pe) {
 					throw errorAttribute(ERROR_DATE, "actionStatus", "terminationTime");
 				}

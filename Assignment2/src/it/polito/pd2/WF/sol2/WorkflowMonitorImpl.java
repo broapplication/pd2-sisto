@@ -16,19 +16,19 @@ public class WorkflowMonitorImpl implements WorkflowMonitor {
 	
 	private Map<String, WorkflowReader> workflows;
 	private Set<ProcessReader> processes;
-	private Map<String, Set<ActionStatusImpl>> actorsIdrefs;
+	private Map<String, Set<ActionStatusReaderImpl>> actorsIdrefs;
 	
 	public WorkflowMonitorImpl() {
 	
 		workflows=new LinkedHashMap<String, WorkflowReader>();
 		processes=new LinkedHashSet<ProcessReader>();
-		actorsIdrefs=new HashMap<String, Set<ActionStatusImpl>>();
+		actorsIdrefs=new HashMap<String, Set<ActionStatusReaderImpl>>();
 
 	}
 	
-	public void addActorLink(String idref, ActionStatusImpl actionStatus) {
+	public void addActorLink(String idref, ActionStatusReaderImpl actionStatus) {
 		if(!actorsIdrefs.containsKey(idref))
-			actorsIdrefs.put(idref, new HashSet<ActionStatusImpl>());
+			actorsIdrefs.put(idref, new HashSet<ActionStatusReaderImpl>());
 		actorsIdrefs.get(idref).add(actionStatus);
 
 	}

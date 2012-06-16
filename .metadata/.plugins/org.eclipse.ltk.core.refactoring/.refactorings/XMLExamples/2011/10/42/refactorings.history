@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Copy element &apos;DomWalker.java&apos; to &apos;Assignment2/src/it.polito.pd2.WF.sol2&apos;&#x0D;&#x0A;- Original project: &apos;XMLExamples&apos;&#x0D;&#x0A;- Destination element: &apos;Assignment2/src/it.polito.pd2.WF.sol2&apos;&#x0D;&#x0A;- Original element: &apos;it.polito.pad2.xml.DomWalker.java&apos;" description="Copy compilation unit" destination="=Assignment2/src&lt;it.polito.pd2.WF.sol2" element1="/src&lt;it.polito.pad2.xml{DomWalker.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1319211098293" units="1" version="1.0"/>
-</session>
