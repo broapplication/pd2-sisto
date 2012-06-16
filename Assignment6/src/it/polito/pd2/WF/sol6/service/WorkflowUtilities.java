@@ -152,7 +152,7 @@ public abstract class WorkflowUtilities {
 		ActionsField availableActions=ActionsField.LENGTH;
 		ActionsField activeActions=ActionsField.LENGTH;
 		ActionsField terminatedActions=ActionsField.LENGTH;
-		boolean actionFieldEmbedded=false;
+		boolean actionFieldEmbedded=true;
 		
 		if(fields != null) {
 			if(fields.isWorkflowName() != null)
