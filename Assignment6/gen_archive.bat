@@ -1,0 +1,1 @@
+jar -cf lab6.zip sol_build.xml src\it\polito\pd2\WF\sol6\client1\*.java src\it\polito\pd2\WF\sol6\client2\*.java src\it\polito\pd2\WF\sol6\service\*.java wsdl\wsService.wsdl
